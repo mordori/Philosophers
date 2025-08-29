@@ -1,0 +1,8 @@
+#.gitignore
+.vscode/
+dep/
+obj/
+*.o
+*.d
+a.out
+philo
