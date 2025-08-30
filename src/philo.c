@@ -6,25 +6,57 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/29 21:17:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/30 05:49:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include "simulation.h"
 
-void	init_philos(t_philo *philos, const t_config *congif)
+static inline void	print_state(t_philo *philo);
+
+void	init_philos(t_sim *sim)
 {
 	int	i;
 
 	i = 0;
-	while (i < congif->philos)
+	while (i < sim->num_philos)
 	{
-		philos[i].id = i;
-		philos[i].state = i % MAX;
-		if (pthread_create(philos[i].thread, NULL, ,NULL))
+		sim->philos[i].id = i;
+		sim->philos[i].sim = sim;
+		sim->philos[i].state = i % ALIVE;
+		++i;
+	}
+}
+
+void	*philo_routine(void *arg)
+{
+	t_philo	philo;
+
+	philo = *(t_philo *)arg;
+	while (philo.state < DEAD)
+	{
+		if (philo.state == THINKING)
 		{
-			ft_error("Failed to create a thread.");
-			break;
+			if (philo.time > philo.sim->time_to_die)
+			{
+				philo.state = DEAD;
+
+			}
+		}
+		else if (philo.state == EATING)
+		{
+
+		}
+		else if (philo.state == SLEEPING)
+		{
+
 		}
 	}
+	return (NULL);
+}
+
+static inline void	print_state(t_philo *philo)
+{
+
 }

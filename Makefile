@@ -6,14 +6,14 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/30 16:50:13 by myli-pen          #+#    #+#              #
-#    Updated: 2025/08/29 19:53:20 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/08/30 02:20:02 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=philo
 
 CC			=cc
-CFLAGS		=-Wall -Wextra -Werror -Wunreachable-code -O3
+CFLAGS		=-Wall -Wextra -Werror -Wunreachable-code
 LDFLAGS		=-pthread
 MAKEFLAGS	+= --no-print-directory
 
@@ -26,7 +26,7 @@ DIR_DEP		=dep/
 INCS		=$(addprefix -I , \
 				$(DIR_INC))
 SRCS		=$(addprefix $(DIR_SRC), \
-				main.c config.c errors.c philo.c simulation.c utils.c)
+				main.c  errors.c philo.c simulation.c utils.c)
 OBJS		=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		=$(patsubst $(DIR_SRC)%.c, $(DIR_DEP)%.d, $(SRCS))
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:58:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/29 19:26:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/30 03:44:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,13 @@ size_t	ft_strlen(const char *s)
 	while (*s++)
 		++len;
 	return (len);
+}
+
+void	set_with_mutex(int *var, int val, pthread_mutex_t *mutex)
+{
+	pthread_mutex_lock(mutex);
+	*var = val;
+	pthread_mutex_unlock(mutex);
 }
 
 /**
