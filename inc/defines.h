@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:13:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/30 02:18:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:14:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@
 
 # define ERROR -1
 # define MAX_PHILOS 200
-# define MIN_TIME 60
+# define MIN_TASK_TIME 60
+# define SPIN_TIME 100
 
-typedef enum e_state	t_state;
+typedef struct s_config	t_config;
 typedef struct s_sim	t_sim;
 typedef struct s_fork	t_fork;
 typedef struct s_philo	t_philo;

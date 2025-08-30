@@ -1,40 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   string_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:58:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/30 03:44:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:09:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
+#include "string_utils.h"
+#include "errors.h"
 
+static inline int64_t	ft_strtol(char *str, char *end);
 static inline bool	ft_isspace(char c);
 static inline bool	ft_isdigit(int c);
 
-int64_t	ft_strtol(char *str, char *end)
+bool	parse_int(char *str, int *value)
 {
-	int		sign;
-	int64_t	number;
+	int64_t	val;
+	char	endptr;
 
-	*end = 'e';
-	number = 0;
-	if (!str)
-		return (number);
-	while (ft_isspace(*str))
-		++str;
-	sign = 1;
-	if ((*str == '-' || *str == '+') && *str++ == '-')
-		sign = -1;
-	while (ft_isdigit(*str))
+	val = ft_strtol(str, &endptr);
+	if (endptr || val > INT_MAX || val < INT_MIN)
 	{
-		number = number * 10 + (*str++ - '0');
-		*end = *str;
+		ft_perror("Invalid input.");
+		return (false);
 	}
-	return (sign * number);
+	*value = (int)val;
+	return (true);
 }
 
 /**
@@ -55,11 +50,26 @@ size_t	ft_strlen(const char *s)
 	return (len);
 }
 
-void	set_with_mutex(int *var, int val, pthread_mutex_t *mutex)
+static inline int64_t	ft_strtol(char *str, char *end)
 {
-	pthread_mutex_lock(mutex);
-	*var = val;
-	pthread_mutex_unlock(mutex);
+	int		sign;
+	int64_t	number;
+
+	*end = 'e';
+	number = 0;
+	if (!str)
+		return (number);
+	while (ft_isspace(*str))
+		++str;
+	sign = 1;
+	if ((*str == '-' || *str == '+') && *str++ == '-')
+		sign = -1;
+	while (ft_isdigit(*str))
+	{
+		number = number * 10 + (*str++ - '0');
+		*end = *str;
+	}
+	return (sign * number);
 }
 
 /**

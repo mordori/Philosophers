@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   simulation_utils.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/29 18:04:47 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/30 03:44:31 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/08/30 17:00:19 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/08/30 20:45:40 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#ifndef SIMULATION_UTILS_H
+# define SIMULATION_UTILS_H
 
-# include <stddef.h>
 # include <pthread.h>
+# include <stdlib.h>
+# include <sys/time.h>
 
-# include "defines.h"
+#include "defines.h"
 
-int64_t	ft_strtol(char *str, char *end);
-size_t	ft_strlen(const char *s);
 void	set_with_mutex(int *var, int val, pthread_mutex_t *mutex);
+int		get_with_mutex(const int var, pthread_mutex_t *mutex);
+int64_t	time_now(void);
+void	free_sim(t_sim *sim);
 
 #endif

@@ -6,11 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:24:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/29 20:09:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:10:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
+#include "string_utils.h"
 
 ssize_t	ft_putstr_fd(char *s, int fd);
 ssize_t	ft_putendl_fd(char *s, int fd);
@@ -20,7 +21,7 @@ ssize_t	ft_putendl_fd(char *s, int fd);
  *
  * @param msg Error message to display.
  */
-void	ft_error(char *msg)
+void	ft_perror(char *msg)
 {
 	ft_putstr_fd("Error: ", STDERR_FILENO);
 	ft_putendl_fd(msg, STDERR_FILENO);
