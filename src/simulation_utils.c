@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/30 20:45:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:34:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int64_t	time_now(void)
 	int64_t			result;
 
 	gettimeofday(&tv, NULL);
-	result = tv.tv_sec * 1000LL + tv.tv_usec / 1000;
+	result = (int64_t)tv.tv_sec * 1000 + (int64_t)tv.tv_usec / 1000;
 	return (result);
 }
 
