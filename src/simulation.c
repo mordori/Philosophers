@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/30 21:25:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/31 03:20:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 static inline bool	init_config(t_sim *sim, const int argc, char *argv[]);
 static inline bool	validate_config(const t_sim *sim, const int argc);
-static inline void	monitor_philos(t_sim *sim);
+static inline bool	init_mutex(t_sim *sim);
 
 bool	init_sim(t_sim *sim, const int argc, char *argv[])
 {
@@ -30,55 +30,53 @@ bool	init_sim(t_sim *sim, const int argc, char *argv[])
 	sim->forks = malloc(sizeof(t_fork) * sim->config.num_philos);
 	if (!sim->philos || !sim->forks)
 	{
-		free_sim(sim);
+		clean_sim(sim, NULL, NULL);
 		ft_perror("Malloc philos or forks.");
 		return (false);
 	}
 	i = -1;
 	while (++i < sim->config.num_philos)
 	{
-		sim->forks[i].id = i + 1;
 		sim->philos[i].id = i + 1;
 		sim->philos[i].sim = sim;
 		sim->philos[i].meals = 0;
 		sim->philos[i].time_last_meal = time_now();
 	}
-	pthread_mutex_init(&sim->mutex_active, NULL);
-	pthread_mutex_init(&sim->mutex_print, NULL);
+	if (!init_mutex(sim))
+		return (false);
 	sim->start = false;
 	sim->active = false;
 	return (true);
 }
 
-bool	simulate(t_sim *sim)
+void	simulate(t_sim *sim)
 {
-	int		i;
-	bool	result;
+	int	i;
 
-	result = true;
-	i = -1;
-	while (++i < sim->config.num_philos)
+	i = 0;
+	while (i < sim->config.num_philos)
+	{
 		if (pthread_create(&sim->philos[i].thread, NULL,
 			philo_routine, &sim->philos[i]))
 		{
 			ft_perror("Failed to create a thread.");
-			result = false;
 			break ;
 		}
+		++i;
+	}
 	if (i == sim->config.num_philos)
 	{
 		set_with_mutex(&sim->active, true, &sim->mutex_active);
-		monitor_philos(sim);
 		sim->time_start = time_now();
 	}
 	set_with_mutex(&sim->start, true, &sim->mutex_active);
+	if (i == sim->config.num_philos)
+		monitor_philos(sim);
 	while (i--)
+	{
 		if(pthread_join(sim->philos[i].thread, NULL))
-		{
 			ft_perror("Failed to join a thread.");
-			result = false;
-		}
-	return (result);
+	}
 }
 
 static inline bool	init_config(t_sim *sim, const int argc, char *argv[])
@@ -122,26 +120,41 @@ config.time_to_sleep < MIN_TASK_TIME || \
 	return (true);
 }
 
-static inline void	monitor_philos(t_sim *sim)
+static inline bool	init_mutex(t_sim *sim)
 {
-	int		i;
-	int64_t	time;
+	int	i;
 
-	while (get_with_mutex(sim->active, &sim->mutex_active))
+	sim->philos_init = 0;
+	sim->forks_init = 0;
+	i = -1;
+	while (++i < sim->config.num_philos)
 	{
-		i = sim->config.num_philos;
-		while (i--)
+		if (pthread_mutex_init(&sim->philos[i].mutex, NULL))
 		{
-			time = time_now() - sim->philos[i].time_last_meal;
-			if (time > sim->config.time_to_die)
-			{
-				pthread_mutex_lock(&sim->mutex_print);
-				printf("%ld %d died\n", time, sim->philos[i].id);
-				pthread_mutex_unlock(&sim->mutex_print);
-				set_with_mutex(&sim->active, false, &sim->mutex_active);
-				break ;
-			}
+			ft_perror("Init fork mutex.");
+			clean_sim(sim, NULL, NULL);
+			return (false);
 		}
-		usleep(SPIN_TIME);
+		++sim->philos_init;
+		if (pthread_mutex_init(&sim->forks[i].mutex, NULL))
+		{
+			ft_perror("Init fork mutex.");
+			clean_sim(sim, NULL, NULL);
+			return (false);
+		}
+		++sim->forks_init;
 	}
+	if (pthread_mutex_init(&sim->mutex_active, NULL))
+	{
+		ft_perror("Init active mutex.");
+		clean_sim(sim, NULL, NULL);
+		return (false);
+	}
+	if (pthread_mutex_init(&sim->mutex_print, NULL))
+	{
+		ft_perror("Init print mutex.");
+		clean_sim(sim, &sim->mutex_active, NULL);
+		return (false);
+	}
+	return (true);
 }

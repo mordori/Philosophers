@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:01:50 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/30 20:51:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/31 03:20:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 int	main(int argc, char *argv[])
 {
 	t_sim	sim;
-	bool	result;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -27,7 +26,7 @@ int	main(int argc, char *argv[])
 	}
 	if (!init_sim(&sim, argc, argv))
 		return (EXIT_FAILURE);
-	result = simulate(&sim);
-	free_sim(&sim);
-	return (!result);
+	simulate(&sim);
+	clean_sim(&sim, &sim.mutex_active, &sim.mutex_print);
+	return (EXIT_SUCCESS);
 }
