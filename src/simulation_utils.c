@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 04:24:57 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:30:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	monitor_philo_death(t_sim *sim)
 	int		i;
 	int64_t	time;
 
-	wait_for(MIN_TASK_TIME + time_now(), sim);
+	wait_for(SPIN_TIME + MIN_TASK_TIME + time_now(), sim);
 	while (sim->philos_dined != sim->config.num_philos)
 	{
 		i = sim->config.num_philos;
@@ -67,27 +67,6 @@ void	wait_for(int64_t target, t_sim *sim)
 	}
 }
 
-void	wait_for_us(int64_t target, t_sim *sim)
-{
-	int64_t	current;
-	int64_t	interval;
-
-	current = time_now();
-	target += current;
-	while (current < target)
-	{
-		if (!sim->active)
-			return ;
-		interval = (target - current);
-		if (interval <= 0)
-			return ;
-		if (interval > SPIN_TIME)
-			interval = SPIN_TIME;
-		usleep(interval);
-		current = time_now();
-	}
-}
-
 int64_t	time_now(void)
 {
 	struct timeval	tv;
@@ -118,4 +97,19 @@ void	clean_sim(t_sim *sim, pthread_mutex_t *print)
 	}
 	free(sim->philos);
 	free(sim->forks);
+}
+
+void	init_philos(t_sim *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->config.num_philos)
+	{
+		sim->philos[i].id = i + 1;
+		sim->philos[i].sim = sim;
+		sim->philos[i].meals = 0;
+		sim->philos[i].time_last_meal = time_now();
+		++i;
+	}
 }

@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/30 16:50:13 by myli-pen          #+#    #+#              #
-#    Updated: 2025/08/31 20:50:22 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/01 18:54:23 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME		=philo
 CC			=cc
 CFLAGS		=-Wall -Wextra -Werror -Wunreachable-code -O3
 LDFLAGS		=-pthread
-MAKEFLAGS	+= --no-print-directory
+MAKEFLAGS	+= --no-print-directory -j$(shell nproc)
 
 DIR_INC		=inc/
 DIR_SRC		=src/

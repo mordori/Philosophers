@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 04:11:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:32:23 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ static inline bool	init_mutex(t_sim *sim);
 
 bool	init_sim(t_sim *sim, const int argc, char *argv[])
 {
-	int	i;
-
 	if (!init_config(sim, argc, argv))
 		return (false);
 	sim->philos = malloc(sizeof(t_philo) * sim->config.num_philos);
@@ -34,14 +32,7 @@ bool	init_sim(t_sim *sim, const int argc, char *argv[])
 		ft_perror("Malloc philos or forks.");
 		return (false);
 	}
-	i = -1;
-	while (++i < sim->config.num_philos)
-	{
-		sim->philos[i].id = i + 1;
-		sim->philos[i].sim = sim;
-		sim->philos[i].meals = 0;
-		sim->philos[i].time_last_meal = time_now();
-	}
+	init_philos(sim);
 	if (!init_mutex(sim))
 		return (false);
 	sim->philos_dined = 0;
@@ -57,8 +48,8 @@ void	simulate(t_sim *sim)
 	i = 0;
 	while (i < sim->config.num_philos)
 	{
-		if (pthread_create(&sim->philos[i].thread, NULL,
-			philo_routine, &sim->philos[i]))
+		if (pthread_create(&sim->philos[i].thread, NULL, \
+philo_routine, &sim->philos[i]))
 		{
 			ft_perror("Failed to create a thread.");
 			break ;
@@ -75,7 +66,7 @@ void	simulate(t_sim *sim)
 		monitor_philo_death(sim);
 	while (i--)
 	{
-		if(pthread_join(sim->philos[i].thread, NULL))
+		if (pthread_join(sim->philos[i].thread, NULL))
 			ft_perror("Failed to join a thread.");
 	}
 }

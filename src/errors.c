@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:24:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/31 20:44:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:54:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,3 @@ static inline size_t	ft_strlen(const char *s)
 		++len;
 	return (len);
 }
-
