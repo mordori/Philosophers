@@ -6,15 +6,15 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:24:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/31 00:28:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/31 20:44:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
-#include "string_utils.h"
 
-ssize_t	ft_putstr_fd(char *s, int fd);
-ssize_t	ft_putendl_fd(char *s, int fd);
+static inline size_t	ft_strlen(const char *s);
+static inline ssize_t	ft_putstr_fd(char *s, int fd);
+static inline ssize_t	ft_putendl_fd(char *s, int fd);
 
 /**
  * @brief Handles errors by printing a message and exiting.
@@ -73,3 +73,22 @@ ssize_t	ft_putendl_fd(char *s, int fd)
 		return (ERROR);
 	return (bytes + 1);
 }
+
+/**
+ * Calculates the amount of characters in string `s`.
+ *
+ * @param s Source string.
+ * @return The length of the string `s`.
+ */
+static inline size_t	ft_strlen(const char *s)
+{
+	size_t	len;
+
+	if (!s)
+		return (false);
+	len = 0;
+	while (*s++)
+		++len;
+	return (len);
+}
+

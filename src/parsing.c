@@ -1,53 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   string_utils.c                                     :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:58:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/30 20:09:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/08/31 20:45:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "string_utils.h"
+#include "parsing.h"
 #include "errors.h"
 
 static inline int64_t	ft_strtol(char *str, char *end);
 static inline bool	ft_isspace(char c);
 static inline bool	ft_isdigit(int c);
 
-bool	parse_int(char *str, int *value)
+bool	parse_int(char *str, int64_t *value)
 {
-	int64_t	val;
+	int64_t	result;
 	char	endptr;
 
-	val = ft_strtol(str, &endptr);
-	if (endptr || val > INT_MAX || val < INT_MIN)
+	result = ft_strtol(str, &endptr);
+	if (endptr || result > INT_MAX || result < INT_MIN)
 	{
 		ft_perror("Invalid input.");
 		return (false);
 	}
-	*value = (int)val;
+	*value = result;
 	return (true);
-}
-
-/**
- * Calculates the amount of characters in string `s`.
- *
- * @param s Source string.
- * @return The length of the string `s`.
- */
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
-
-	if (!s)
-		return (false);
-	len = 0;
-	while (*s++)
-		++len;
-	return (len);
 }
 
 static inline int64_t	ft_strtol(char *str, char *end)

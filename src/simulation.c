@@ -6,14 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/31 03:20:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/01 04:11:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "simulation.h"
 #include "errors.h"
 #include "philosopher.h"
-#include "string_utils.h"
+#include "parsing.h"
 #include "simulation_utils.h"
 
 static inline bool	init_config(t_sim *sim, const int argc, char *argv[]);
@@ -30,7 +30,7 @@ bool	init_sim(t_sim *sim, const int argc, char *argv[])
 	sim->forks = malloc(sizeof(t_fork) * sim->config.num_philos);
 	if (!sim->philos || !sim->forks)
 	{
-		clean_sim(sim, NULL, NULL);
+		clean_sim(sim, NULL);
 		ft_perror("Malloc philos or forks.");
 		return (false);
 	}
@@ -44,6 +44,7 @@ bool	init_sim(t_sim *sim, const int argc, char *argv[])
 	}
 	if (!init_mutex(sim))
 		return (false);
+	sim->philos_dined = 0;
 	sim->start = false;
 	sim->active = false;
 	return (true);
@@ -64,14 +65,14 @@ void	simulate(t_sim *sim)
 		}
 		++i;
 	}
+	while (sim->philos_init < i)
+		wait_for(SPIN_TIME, sim);
 	if (i == sim->config.num_philos)
-	{
-		set_with_mutex(&sim->active, true, &sim->mutex_active);
-		sim->time_start = time_now();
-	}
-	set_with_mutex(&sim->start, true, &sim->mutex_active);
+		sim->active = true;
+	sim->time_start = time_now();
+	sim->start = true;
 	if (i == sim->config.num_philos)
-		monitor_philos(sim);
+		monitor_philo_death(sim);
 	while (i--)
 	{
 		if(pthread_join(sim->philos[i].thread, NULL))
@@ -124,36 +125,26 @@ static inline bool	init_mutex(t_sim *sim)
 {
 	int	i;
 
-	sim->philos_init = 0;
-	sim->forks_init = 0;
+	sim->num_philo_mutex_init = 0;
+	sim->num_fork_mutex_init = 0;
 	i = -1;
 	while (++i < sim->config.num_philos)
 	{
-		if (pthread_mutex_init(&sim->philos[i].mutex, NULL))
+		if (!pthread_mutex_init(&sim->philos[i].mutex, NULL))
+			++sim->num_philo_mutex_init;
+		if (!pthread_mutex_init(&sim->forks[i].mutex, NULL))
+			++sim->num_fork_mutex_init;
+		if (sim->num_philo_mutex_init == i || sim->num_fork_mutex_init == i)
 		{
-			ft_perror("Init fork mutex.");
-			clean_sim(sim, NULL, NULL);
+			ft_perror("Init mutex.");
+			clean_sim(sim, NULL);
 			return (false);
 		}
-		++sim->philos_init;
-		if (pthread_mutex_init(&sim->forks[i].mutex, NULL))
-		{
-			ft_perror("Init fork mutex.");
-			clean_sim(sim, NULL, NULL);
-			return (false);
-		}
-		++sim->forks_init;
-	}
-	if (pthread_mutex_init(&sim->mutex_active, NULL))
-	{
-		ft_perror("Init active mutex.");
-		clean_sim(sim, NULL, NULL);
-		return (false);
 	}
 	if (pthread_mutex_init(&sim->mutex_print, NULL))
 	{
-		ft_perror("Init print mutex.");
-		clean_sim(sim, &sim->mutex_active, NULL);
+		ft_perror("Init mutex.");
+		clean_sim(sim, NULL);
 		return (false);
 	}
 	return (true);
