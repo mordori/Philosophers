@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:13:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/02 03:34:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:09:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define ERROR -1
 # define MAX_PHILOS 200
 # define MIN_TASK_TIME 60
-# define SPIN_TIME 100
+# define SPIN_TIME 250
 
 typedef struct s_config	t_config;
 typedef struct s_sim	t_sim;

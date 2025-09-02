@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:01:50 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 17:55:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:18:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@ int	main(int argc, char *argv[])
 	if (!init_sim(&sim, argc, argv))
 		return (EXIT_FAILURE);
 	simulate(&sim);
-	clean_sim(&sim, &sim.mutex_print);
+	clean_sim(&sim, &sim.mutex);
 	return (EXIT_SUCCESS);
 }

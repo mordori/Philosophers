@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:57:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 23:02:45 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:53:19 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ struct s_sim
 	t_fork						*forks;
 	int							num_philo_mutex_init;
 	int							num_fork_mutex_init;
-	pthread_mutex_t				mutex_print;
-	volatile _Atomic int		philos_init;
+	pthread_mutex_t				mutex;
+	volatile _Atomic int		threads;
 	volatile _Atomic int64_t	philos_dined;
 	volatile _Atomic bool		start;
 	volatile _Atomic bool		active;

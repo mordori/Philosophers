@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/02 02:54:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/02 21:07:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 
 void	monitor_philo_death(t_sim *sim)
 {
-	int		i;
-	int64_t	time;
+	int	i;
 
 	wait_for(MIN_TASK_TIME + time_now(), sim);
 	while (sim->philos_dined != sim->config.num_philos)
@@ -32,15 +31,12 @@ void	monitor_philo_death(t_sim *sim)
 				pthread_mutex_unlock(&sim->philos[i].mutex);
 				continue ;
 			}
-			time = time_now() - sim->philos[i].time_last_meal;
 			pthread_mutex_unlock(&sim->philos[i].mutex);
-			if (time > sim->config.time_to_die)
+			if (time_now() - sim->philos[i].time_last_meal > \
+sim->config.time_to_die)
 			{
-				pthread_mutex_lock(&sim->mutex_print);
-				time = time_now() - sim->time_start;
-				printf("%ld %d died\n", time, sim->philos[i].id);
+				print_state(&sim->philos[i], "died");
 				sim->active = false;
-				pthread_mutex_unlock(&sim->mutex_print);
 				return ;
 			}
 		}
@@ -91,25 +87,28 @@ void	clean_sim(t_sim *sim, pthread_mutex_t *print)
 	}
 	i = 0;
 	while (i < sim->num_fork_mutex_init)
-	{
-		pthread_mutex_destroy(&sim->forks[i].mutex);
-		++i;
-	}
+		pthread_mutex_destroy(&sim->forks[i++].mutex);
 	free(sim->philos);
 	free(sim->forks);
 }
 
 void	init_philos(t_sim *sim)
 {
-	int	i;
+	t_philo	*philo;
+	int		i;
 
 	i = 0;
 	while (i < sim->config.num_philos)
 	{
-		sim->philos[i].id = i + 1;
-		sim->philos[i].sim = sim;
-		sim->philos[i].meals = 0;
-		sim->philos[i].time_last_meal = time_now();
+		philo = &sim->philos[i];
+		philo->id = i + 1;
+		philo->sim = sim;
+		philo->meals = 0;
+		philo->time_last_meal = time_now();
+		philo->fork_l = &philo->sim->forks[philo->id - 1];
+		philo->fork_r = &philo->sim->forks[philo->id % sim->config.num_philos];
+		philo->fork_l->owner = NULL;
+		philo->fork_l->reservation = NULL;
 		++i;
 	}
 }
