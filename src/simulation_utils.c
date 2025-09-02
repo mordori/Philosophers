@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 18:30:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/02 02:54:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@ void	monitor_philo_death(t_sim *sim)
 	int		i;
 	int64_t	time;
 
-	wait_for(SPIN_TIME + MIN_TASK_TIME + time_now(), sim);
+	wait_for(MIN_TASK_TIME + time_now(), sim);
 	while (sim->philos_dined != sim->config.num_philos)
 	{
+		usleep(SPIN_TIME);
 		i = sim->config.num_philos;
 		while (i--)
 		{
@@ -43,7 +44,6 @@ void	monitor_philo_death(t_sim *sim)
 				return ;
 			}
 		}
-		usleep(SPIN_TIME);
 	}
 }
 

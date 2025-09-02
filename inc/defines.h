@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:13:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/31 21:28:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/02 03:34:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdbool.h>
 # include <stdint.h>
 # include <limits.h>
+# include <stddef.h>
 
 # define ERROR -1
 # define MAX_PHILOS 200

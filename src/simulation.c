@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 18:32:23 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/02 02:52:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,8 @@ bool	init_sim(t_sim *sim, const int argc, char *argv[])
 
 void	simulate(t_sim *sim)
 {
-	int	i;
+	static int	i = 0;
 
-	i = 0;
 	while (i < sim->config.num_philos)
 	{
 		if (pthread_create(&sim->philos[i].thread, NULL, \
@@ -57,7 +56,7 @@ philo_routine, &sim->philos[i]))
 		++i;
 	}
 	while (sim->philos_init < i)
-		wait_for(SPIN_TIME, sim);
+		wait_for(SPIN_TIME + time_now(), sim);
 	if (i == sim->config.num_philos)
 		sim->active = true;
 	sim->time_start = time_now();
@@ -114,12 +113,11 @@ config.time_to_sleep < MIN_TASK_TIME || \
 
 static inline bool	init_mutex(t_sim *sim)
 {
-	int	i;
+	static int	i = 0;
 
 	sim->num_philo_mutex_init = 0;
 	sim->num_fork_mutex_init = 0;
-	i = -1;
-	while (++i < sim->config.num_philos)
+	while (i < sim->config.num_philos)
 	{
 		if (!pthread_mutex_init(&sim->philos[i].mutex, NULL))
 			++sim->num_philo_mutex_init;
@@ -131,6 +129,7 @@ static inline bool	init_mutex(t_sim *sim)
 			clean_sim(sim, NULL);
 			return (false);
 		}
+		++i;
 	}
 	if (pthread_mutex_init(&sim->mutex_print, NULL))
 	{

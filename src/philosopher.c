@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 18:09:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/02 03:34:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ void	*philo_routine(void *arg)
 	++philo->sim->philos_init;
 	while (!philo->sim->start)
 		usleep(SPIN_TIME);
-	wait_for(philo->sim->time_start + 100, philo->sim);
-	philo->sim->time_start = time_now();
-	philo->time_last_meal = philo->sim->time_start;
+	if (philo->id % 2 == 0)
+		usleep(SPIN_TIME);
+	philo->time_last_meal = time_now();
 	while (philo->sim->active)
 	{
 		print_state(philo, "is thinking");
@@ -64,7 +64,7 @@ static inline bool	take_both_forks(t_philo *philo)
 
 	first_fork = philo->fork_l;
 	second_fork = philo->fork_r;
-	if (philo->fork_l > philo->fork_r)
+	if (philo->id == philo->sim->config.num_philos)
 	{
 		first_fork = philo->fork_r;
 		second_fork = philo->fork_l;
@@ -87,8 +87,6 @@ static inline bool	take_both_forks(t_philo *philo)
 
 static inline bool	eat(t_philo *philo)
 {
-	if (philo->id % 2 == 0)
-		usleep(1000);
 	if (!take_both_forks(philo))
 		return (false);
 	pthread_mutex_lock(&philo->mutex);

@@ -6,12 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 17:00:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 18:30:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/01 23:02:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SIMULATION_UTILS_H
 # define SIMULATION_UTILS_H
+
+# define _GNU_SOURCE
 
 # include <pthread.h>
 # include <stdlib.h>
