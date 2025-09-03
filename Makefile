@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/30 16:50:13 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/03 02:19:08 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/03 20:35:17 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,8 @@ fclean: clean
 		echo "$(RED) [-]$(COLOR) removed $(NAME)"; \
 	fi
 
-re: fclean all
+re: fclean
+	@$(MAKE) all 2>/dev/null
 
 .PHONY: all clean fclean re
 .SECONDARY: $(OBJS) $(DEPS)
