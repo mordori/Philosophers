@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:21:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/02 21:07:05 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/03 02:07:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@
 struct s_fork
 {
 	pthread_mutex_t	mutex;
-	t_philo			*reservation;
-	t_philo			*owner;
+	pthread_mutex_t	mutex_reservation;
 };
 
 struct s_philo
@@ -35,12 +34,10 @@ struct s_philo
 	t_fork						*fork_r;
 	int							id;
 	pthread_t					thread;
-	pthread_mutex_t				mutex;
-	volatile int64_t			meals;
+	volatile _Atomic int64_t	meals;
 	volatile _Atomic int64_t	time_last_meal;
 };
 
 void	*philo_routine(void *arg);
-void	print_state(t_philo *philo, char *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/02 20:55:11 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/03 02:38:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ philo_routine, &sim->philos[i]))
 		++i;
 	}
 	while (sim->threads < i)
-		wait_for(SPIN_TIME + time_now(), sim);
+		wait_for(SPIN_TIME, sim);
 	if (i == sim->config.num_philos)
 		sim->active = true;
 	sim->time_start = time_now();
@@ -120,11 +120,11 @@ static inline bool	init_mutex(t_sim *sim)
 
 	while (i < sim->config.num_philos)
 	{
-		if (!pthread_mutex_init(&sim->philos[i].mutex, NULL))
-			++sim->num_philo_mutex_init;
 		if (!pthread_mutex_init(&sim->forks[i].mutex, NULL))
 			++sim->num_fork_mutex_init;
-		if (sim->num_philo_mutex_init == i || sim->num_fork_mutex_init == i)
+		if (!pthread_mutex_init(&sim->forks[i].mutex_reservation, NULL))
+			++sim->num_fork_mutex_init;
+		if (sim->num_fork_mutex_init / 2 == i)
 		{
 			ft_perror("Init mutex.");
 			clean_sim(sim, NULL);

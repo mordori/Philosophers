@@ -6,15 +6,15 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:24:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 17:54:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/03 02:17:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
 
-static inline size_t	ft_strlen(const char *s);
 static inline ssize_t	ft_putstr_fd(char *s, int fd);
 static inline ssize_t	ft_putendl_fd(char *s, int fd);
+static inline size_t	ft_strlen(const char *s);
 
 /**
  * @brief Handles errors by printing a message and exiting.
@@ -34,7 +34,7 @@ void	ft_perror(char *msg)
  * @param fd File descriptor.
  * @return Number of characters written, ERROR on error or only partial write.
  */
-ssize_t	ft_putstr_fd(char *s, int fd)
+static inline ssize_t	ft_putstr_fd(char *s, int fd)
 {
 	ssize_t	bytes;
 	ssize_t	totalbytes;
@@ -62,7 +62,7 @@ ssize_t	ft_putstr_fd(char *s, int fd)
  * @param fd File descriptor.
  * @return Number of characters written, ERROR on error or only partial write.
  */
-ssize_t	ft_putendl_fd(char *s, int fd)
+static inline ssize_t	ft_putendl_fd(char *s, int fd)
 {
 	ssize_t	bytes;
 
@@ -85,7 +85,7 @@ static inline size_t	ft_strlen(const char *s)
 	size_t	len;
 
 	if (!s)
-		return (false);
+		return (0);
 	len = 0;
 	while (*s++)
 		++len;
