@@ -6,19 +6,18 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/03 03:10:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/03 19:56:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 #include "simulation.h"
 #include "simulation_utils.h"
-#include "errors.h"
 
+static inline void	print_state(t_philo *philo, char *str);
 static inline bool	eat(t_philo *philo);
 static inline bool	take_both_forks(t_philo *philo);
 static inline bool	take_fork(t_philo *philo, t_fork *fork);
-static inline void	print_state(t_philo *philo, char *str);
 
 void	*philo_routine(void *arg)
 {
@@ -30,9 +29,9 @@ void	*philo_routine(void *arg)
 	++philo->sim->threads;
 	while (!philo->sim->start)
 		usleep(SPIN_TIME);
-	if (philo->id % 2 == 0)
-		usleep(INITIAL_WAIT_TIME);
 	philo->time_last_meal = time_now();
+	if (philo->id % 2 == 0)
+		usleep(MIN_TASK_TIME / 2 * 1000);
 	while (philo->sim->active)
 	{
 		print_state(philo, "is thinking");
@@ -80,6 +79,31 @@ static inline bool	take_both_forks(t_philo *philo)
 		return (false);
 	}
 	return (true);
+
+	// t_fork	*first_fork;
+	// t_fork	*second_fork;
+
+	// first_fork = philo->fork_l;
+	// second_fork = philo->fork_r;
+	// if (philo->fork_l > philo->fork_r)
+	// {
+	// 	first_fork = philo->fork_r;
+	// 	second_fork = philo->fork_l;
+	// }
+	// if (!take_fork(philo, first_fork))
+	// 	return (false);
+	// if (first_fork == second_fork)
+	// {
+	// 	wait_for(philo->sim->config.time_to_die, philo->sim);
+	// 	pthread_mutex_unlock(&first_fork->mutex);
+	// 	return (false);
+	// }
+	// if (!take_fork(philo, second_fork))
+	// {
+	// 	pthread_mutex_unlock(&first_fork->mutex);
+	// 	return (false);
+	// }
+	// return (true);
 }
 
 static inline bool	eat(t_philo *philo)

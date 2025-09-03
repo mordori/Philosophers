@@ -6,16 +6,15 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:58:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/03 01:10:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/03 19:56:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-#include "errors.h"
 
-static inline int64_t	ft_strtol(char *str, char *end);
-static inline bool	ft_isspace(char c);
 static inline bool	ft_isdigit(int c);
+static inline bool	ft_isspace(char c);
+static inline int64_t	ft_strtol(char *str, char *end);
 
 bool	parse_int(char *str, int64_t *value)
 {
@@ -24,10 +23,7 @@ bool	parse_int(char *str, int64_t *value)
 
 	result = ft_strtol(str, &endptr);
 	if (endptr || result > INT_MAX || result < INT_MIN)
-	{
-		ft_perror("Invalid input.");
 		return (false);
-	}
 	*value = result;
 	return (true);
 }

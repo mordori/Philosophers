@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:57:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/02 20:53:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/03 16:53:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ struct s_sim
 	volatile _Atomic int64_t	time_start;
 };
 
-bool	init_sim(t_sim *sim, const int argc, char *argv[]);
 void	simulate(t_sim *sim);
+bool	init_sim(t_sim *sim, const int argc, char *argv[]);
 
 #endif

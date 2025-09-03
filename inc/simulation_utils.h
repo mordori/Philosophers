@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 17:00:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/01 23:02:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/03 16:52:48 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 
 # include "defines.h"
 
+void	clean_sim(t_sim *sim, pthread_mutex_t *print);
+void	init_philos(t_sim *sim);
 void	monitor_philo_death(t_sim *sim);
 void	wait_for(int64_t target, t_sim *sim);
 int64_t	time_now(void);
-void	clean_sim(t_sim *sim, pthread_mutex_t *print);
-void	init_philos(t_sim *sim);
 
 #endif

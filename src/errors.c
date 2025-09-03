@@ -6,15 +6,15 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:24:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/03 02:17:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/03 16:55:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
 
-static inline ssize_t	ft_putstr_fd(char *s, int fd);
-static inline ssize_t	ft_putendl_fd(char *s, int fd);
 static inline size_t	ft_strlen(const char *s);
+static inline ssize_t	ft_putendl_fd(char *s, int fd);
+static inline ssize_t	ft_putstr_fd(char *s, int fd);
 
 /**
  * @brief Handles errors by printing a message and exiting.
