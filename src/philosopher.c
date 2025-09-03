@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/03 02:38:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/03 03:10:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	*philo_routine(void *arg)
 	philo->time_last_meal = time_now();
 	while (philo->sim->active)
 	{
-		print_state(philo, " is thinking");
+		print_state(philo, "is thinking");
 		if (!eat(philo) || philo->meals == philo->sim->config.num_meals)
 			break ;
-		print_state(philo, " is sleeping");
+		print_state(philo, "is sleeping");
 		wait_for(config.time_to_sleep, philo->sim);
 	}
 	return (NULL);
@@ -60,7 +60,7 @@ static inline bool	take_fork(t_philo *philo, t_fork *fork)
 		return (false);
 	}
 	pthread_mutex_unlock(&fork->mutex_reservation);
-	print_state(philo, " has taken a fork");
+	print_state(philo, "has taken a fork");
 	return (true);
 }
 
@@ -96,7 +96,7 @@ static inline bool	eat(t_philo *philo)
 	philo->meals = (philo->meals + 1) % ((int64_t)INT_MAX + 1);
 	if (philo->meals == philo->sim->config.num_meals)
 		++philo->sim->philos_dined;
-	print_state(philo, " is eating");
+	print_state(philo, "is eating");
 	wait_for(philo->sim->config.time_to_eat, philo->sim);
 	pthread_mutex_unlock(&philo->fork_l->mutex);
 	pthread_mutex_unlock(&philo->fork_r->mutex);
