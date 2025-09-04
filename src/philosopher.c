@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/04 04:12:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:40:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 static inline void	print_state(t_philo *philo, char *str);
 static inline bool	eat(t_philo *philo);
 static inline bool	take_both_forks(t_philo *philo);
-static inline bool	take_fork(t_philo *philo, t_fork *fork);
 
 void	*philo_routine(void *arg)
 {
@@ -41,20 +40,6 @@ void	*philo_routine(void *arg)
 		wait_for(config.time_to_sleep, philo->sim);
 	}
 	return (NULL);
-}
-
-static inline bool	take_fork(t_philo *philo, t_fork *fork)
-{
-	if (!philo->sim->active)
-		return (false);
-	pthread_mutex_lock(&fork->mutex);
-	if (!philo->sim->active)
-	{
-		pthread_mutex_unlock(&fork->mutex);
-		return (false);
-	}
-	print_state(philo, "has taken a fork");
-	return (true);
 }
 
 static inline bool	take_both_forks(t_philo *philo)
@@ -93,8 +78,18 @@ static inline bool	take_both_forks(t_philo *philo)
 		{
 			pthread_mutex_lock(&first_fork->mutex);
 			print_state(philo, "has taken a fork");
+			if (!philo->sim->active)
+			{
+				pthread_mutex_unlock(&first_fork->mutex);
+				return (false);
+			}
 			while (philo->time_last_meal > philos[idx_r].time_last_meal)
 				usleep(SPIN_TIME);
+			if (!philo->sim->active)
+			{
+				pthread_mutex_unlock(&first_fork->mutex);
+				return (false);
+			}
 			pthread_mutex_lock(&second_fork->mutex);
 			print_state(philo, "has taken a fork");
 			return (true);
@@ -103,8 +98,18 @@ static inline bool	take_both_forks(t_philo *philo)
 		{
 			pthread_mutex_lock(&second_fork->mutex);
 			print_state(philo, "has taken a fork");
+			if (!philo->sim->active)
+			{
+				pthread_mutex_unlock(&second_fork->mutex);
+				return (false);
+			}
 			while (philo->time_last_meal > philos[idx_l].time_last_meal)
 				usleep(SPIN_TIME);
+			if (!philo->sim->active)
+			{
+				pthread_mutex_unlock(&second_fork->mutex);
+				return (false);
+			}
 			pthread_mutex_lock(&first_fork->mutex);
 			print_state(philo, "has taken a fork");
 			return (true);
@@ -133,6 +138,8 @@ static inline void	print_state(t_philo *philo, char *str)
 {
 	int64_t	time;
 
+	if (!philo->sim->active)
+		return ;
 	pthread_mutex_lock(&philo->sim->mutex);
 	if (!philo->sim->active)
 	{

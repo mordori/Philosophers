@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/30 16:50:13 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/03 23:15:38 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/04 18:28:58 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,12 +50,15 @@ $(DIR_OBJ)%.o: $(DIR_SRC)%.c
 
 clean:
 	@if [ -d "$(DIR_OBJ)" ]; then \
-		rm -rf $(DIR_OBJ) $(DIR_DEP); \
+		rm -rf $(DIR_OBJ); \
 		echo "$(RED) [-]$(COLOR) removed $(DIR_OBJ)"; \
-		echo "$(RED) [-]$(COLOR) removed $(DIR_DEP)"; \
 	fi
 
 fclean: clean
+	@if [ -d "$(DIR_DEP)" ]; then \
+		rm -rf $(DIR_DEP); \
+		echo "$(RED) [-]$(COLOR) removed $(DIR_DEP)"; \
+	fi
 	@if [ -e "$(NAME)" ]; then \
 		rm -f $(NAME); \
 		echo "$(RED) [-]$(COLOR) removed $(NAME)"; \
