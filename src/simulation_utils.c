@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/03 02:38:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/04 02:23:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ void	wait_for(int64_t target, t_sim *sim)
 int64_t	time_now(void)
 {
 	struct timeval	tv;
-	int64_t			result;
+	int64_t			time;
 
 	gettimeofday(&tv, NULL);
-	result = (int64_t)tv.tv_sec * 1000 + (int64_t)tv.tv_usec / 1000;
-	return (result);
+	time = (int64_t)tv.tv_sec * 1000 + (int64_t)tv.tv_usec / 1000;
+	return (time);
 }
 
 void	clean_sim(t_sim *sim, pthread_mutex_t *sim_mutex)
@@ -79,11 +79,8 @@ void	clean_sim(t_sim *sim, pthread_mutex_t *sim_mutex)
 	if (sim_mutex)
 		pthread_mutex_destroy(sim_mutex);
 	i = 0;
-	while (i < sim->num_fork_mutex_init - sim->num_fork_mutex_init / 2)
+	while (i < sim->num_fork_mutex_init)
 		pthread_mutex_destroy(&sim->forks[i++].mutex);
-	i = 0;
-	while (i < sim->num_fork_mutex_init / 2)
-		pthread_mutex_destroy(&sim->forks[i++].mutex_reservation);
 	free(sim->philos);
 	free(sim->forks);
 }

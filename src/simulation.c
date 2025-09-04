@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/03 17:02:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/04 01:42:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,9 +128,7 @@ static inline bool	init_mutex(t_sim *sim)
 	{
 		if (!pthread_mutex_init(&sim->forks[i].mutex, NULL))
 			++sim->num_fork_mutex_init;
-		if (!pthread_mutex_init(&sim->forks[i].mutex_reservation, NULL))
-			++sim->num_fork_mutex_init;
-		if (sim->num_fork_mutex_init / 2 == i)
+		if (sim->num_fork_mutex_init == i)
 			return (false);
 		++i;
 	}

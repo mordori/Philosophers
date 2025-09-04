@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:21:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/03 02:07:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/04 01:41:57 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 struct s_fork
 {
 	pthread_mutex_t	mutex;
-	pthread_mutex_t	mutex_reservation;
 };
 
 struct s_philo
