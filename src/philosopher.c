@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/07 22:51:44 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/09 05:50:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,17 @@ void	*philo_routine(void *arg)
 	philo->time_last_meal = time_now();
 	while (!philo->sim->start)
 		usleep(SPIN_TIME);
-	if (philo->id % 2)
-		usleep(MIN_TASK_TIME / 2 * 1000);
+	if (philo->id % 2 == 0)
+		wait_for(MIN_TASK_TIME / 2, philo->sim);
+	if (philo->sim->config.num_philos == 1)
+	{
+		print_state(philo, "is thinking");
+		pthread_mutex_lock(&philo->fork_l->mutex);
+		print_state(philo, "has taken a fork");
+		wait_for(philo->sim->config.time_to_die, philo->sim);
+		pthread_mutex_unlock(&philo->fork_l->mutex);
+		return (false);
+	}
 	while (philo->sim->active)
 	{
 		print_state(philo, "is thinking");
@@ -52,30 +61,22 @@ static inline bool	take_both_forks(t_philo *philo)
 
 	first_fork = philo->fork_l;
 	second_fork = philo->fork_r;
-	if (philo->fork_l > philo->fork_r)
+	philos = philo->sim->philos;
+	idx_l = philo->id - 2;
+	if (idx_l < 0)
+		idx_l = philo->sim->config.num_philos - 1;
+	idx_r = philo->id;
+	if (philo->id == philo->sim->config.num_philos)
 	{
 		first_fork = philo->fork_r;
 		second_fork = philo->fork_l;
-	}
-	if (first_fork == second_fork)
-	{
-		pthread_mutex_unlock(&first_fork->mutex);
-		return (false);
+		idx_r = idx_l;
+		idx_l = 0;
 	}
 	while (philo->sim->active)
 	{
-		philos = philo->sim->philos;
-		idx_l = philo->id - 2;
-		if (idx_l < 0)
-			idx_l = philo->sim->config.num_philos - 1;
-		idx_r = philo->id;
-		if (philo->id == philo->sim->config.num_philos)
-		{
-			idx_r = idx_l;
-			idx_l = 0;
-		}
-		if (philo->time_last_meal <= philos[idx_l].time_last_meal || \
-philos[idx_r].meals == philo->sim->config.num_meals)
+		if (!philo->meals || philo->time_last_meal < philos[idx_l].time_last_meal || \
+philos[idx_l].meals == philo->sim->config.num_meals)
 		{
 			pthread_mutex_lock(&first_fork->mutex);
 			print_state(philo, "has taken a fork");
@@ -84,8 +85,8 @@ philos[idx_r].meals == philo->sim->config.num_meals)
 				pthread_mutex_unlock(&first_fork->mutex);
 				return (false);
 			}
-			while (philo->time_last_meal > philos[idx_r].time_last_meal && \
-philos[idx_r].meals < philo->sim->config.num_meals)
+			while (philo->meals && philo->time_last_meal > philos[idx_r].time_last_meal && \
+philos[idx_r].meals != philo->sim->config.num_meals)
 				usleep(SPIN_TIME);
 			if (!philo->sim->active)
 			{
@@ -93,28 +94,6 @@ philos[idx_r].meals < philo->sim->config.num_meals)
 				return (false);
 			}
 			pthread_mutex_lock(&second_fork->mutex);
-			print_state(philo, "has taken a fork");
-			return (true);
-		}
-		if (philo->time_last_meal <= philos[idx_r].time_last_meal || \
-philos[idx_r].meals == philo->sim->config.num_meals)
-		{
-			pthread_mutex_lock(&second_fork->mutex);
-			print_state(philo, "has taken a fork");
-			if (!philo->sim->active)
-			{
-				pthread_mutex_unlock(&second_fork->mutex);
-				return (false);
-			}
-			while (philo->time_last_meal > philos[idx_l].time_last_meal && \
-philos[idx_l].meals < philo->sim->config.num_meals)
-				usleep(SPIN_TIME);
-			if (!philo->sim->active)
-			{
-				pthread_mutex_unlock(&second_fork->mutex);
-				return (false);
-			}
-			pthread_mutex_lock(&first_fork->mutex);
 			print_state(philo, "has taken a fork");
 			return (true);
 		}

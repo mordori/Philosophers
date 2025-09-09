@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/30 16:50:13 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/04 18:28:58 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/09 00:33:21 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME		=philo
 CC			=cc
 CFLAGS		=-Wall -Wextra -Werror -Wunreachable-code -O3 -march=native
 LDFLAGS		=-pthread
-MAKEFLAGS	+= --no-print-directory -j$(shell nproc)
+MAKEFLAGS	+= --no-print-directory
 
 DIR_INC		=inc/
 DIR_SRC		=src/
@@ -64,8 +64,7 @@ fclean: clean
 		echo "$(RED) [-]$(COLOR) removed $(NAME)"; \
 	fi
 
-re: fclean
-	@$(MAKE) all 2>/dev/null
+re: fclean all
 
 .PHONY: all clean fclean re
 .SECONDARY: $(OBJS) $(DEPS)

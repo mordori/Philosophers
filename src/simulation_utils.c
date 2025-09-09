@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/04 02:23:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/09 05:03:56 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,24 +41,24 @@ time_now() - sim->time_start, sim->philos[i].id, "died");
 	}
 }
 
-void	wait_for(int64_t target, t_sim *sim)
+void	wait_for(int64_t duration, t_sim *sim)
 {
 	int64_t	current;
-	int64_t	interval;
+	int64_t	target;
+	int64_t	remaining;
 
 	current = time_now();
-	target += current;
-	while (current < target)
+	target = current + duration;
+	while (sim->active)
 	{
-		if (!sim->active)
-			return ;
-		interval = (target - current) * 1000;
-		if (interval <= 0)
-			return ;
-		if (interval > SPIN_TIME)
-			interval = SPIN_TIME;
-		usleep(interval);
 		current = time_now();
+		if (current >= target)
+			return ;
+		remaining = target - current;
+		if (remaining > 2)
+			usleep((remaining - 1) *  1000);
+		else
+			usleep(SPIN_TIME);
 	}
 }
 

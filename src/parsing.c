@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:58:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/04 18:31:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/09 02:52:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,12 @@ static inline int64_t	ft_strtol(char *str, char *end)
 		sign = -1;
 	while (ft_isdigit(*str))
 	{
+		if (((sign == 1 && number > ((INT64_MAX - (*str - '0')) / 10))) || \
+(sign == -1 && number > (((-(INT64_MIN + (*str - '0'))) / 10))))
+		{
+			*end = 'e';
+			return (ERROR);
+		}
 		number = number * 10 + (*str++ - '0');
 		*end = *str;
 	}
