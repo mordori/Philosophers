@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/10 00:36:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/10 02:03:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	*philo_routine(void *arg)
 	while (philo->sim->active)
 	{
 		print_state(philo, "is thinking");
-		if (!eat(philo) || philo->meals == philo->sim->config.num_meals)
+		if (!eat(philo) || philo->meals == config.num_meals)
 			break ;
 		print_state(philo, "is sleeping");
 		wait_for(config.time_to_sleep, philo->sim);
@@ -85,7 +85,7 @@ static inline bool	eat(t_philo *philo)
 
 static inline int	take_forks(t_philo *philo)
 {
-	if ((!philo->meals && philo->id != philo->sim->config.num_philos) || \
+	if (!philo->meals || \
 philo->time_last_meal < philo->philo_l->time_last_meal || \
 philo->philo_l->meals == philo->sim->config.num_meals)
 	{
@@ -98,38 +98,8 @@ philo->philo_l->meals == philo->sim->config.num_meals)
 		while (philo->meals && \
 philo->time_last_meal > philo->philo_r->time_last_meal && \
 philo->philo_r->meals != philo->sim->config.num_meals)
-{
-	printf("asd %d\n", philo->id);
-	usleep(SPIN_TIME);
-}
+			usleep(SPIN_TIME);
 		pthread_mutex_lock(&philo->fork_r->mutex);
-		if (!print_state(philo, "has taken a fork"))
-		{
-			pthread_mutex_unlock(&philo->fork_l->mutex);
-			pthread_mutex_unlock(&philo->fork_r->mutex);
-			return (EXIT);
-		}
-		return (SUCCESS);
-	}
-	if (!philo->meals || \
-philo->time_last_meal < philo->philo_r->time_last_meal || \
-philo->philo_r->meals == philo->sim->config.num_meals)
-	{
-		pthread_mutex_lock(&philo->fork_r->mutex);
-		if (!print_state(philo, "has taken a fork"))
-		{
-			pthread_mutex_unlock(&philo->fork_r->mutex);
-			return (EXIT);
-		}
-		while ((philo->meals && \
-philo->time_last_meal > philo->philo_l->time_last_meal && \
-philo->philo_l->meals != philo->sim->config.num_meals) || \
-(philo->id == philo->sim->config.num_philos && !philo->philo_l->meals))
-{
-	printf("asd %d\n", philo->id);
-	usleep(SPIN_TIME);
-}
-		pthread_mutex_lock(&philo->fork_l->mutex);
 		if (!print_state(philo, "has taken a fork"))
 		{
 			pthread_mutex_unlock(&philo->fork_l->mutex);
