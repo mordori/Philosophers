@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:21:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/04 01:41:57 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/09 22:11:24 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ struct s_philo
 	t_sim						*sim;
 	t_fork						*fork_l;
 	t_fork						*fork_r;
+	t_philo						*philo_l;
+	t_philo						*philo_r;
 	int							id;
 	pthread_t					thread;
 	volatile _Atomic int64_t	meals;

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/09 05:50:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/10 00:36:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 #include "simulation.h"
 #include "simulation_utils.h"
 
-static inline void	print_state(t_philo *philo, char *str);
 static inline bool	eat(t_philo *philo);
-static inline bool	take_both_forks(t_philo *philo);
+static inline bool	print_state(t_philo *philo, char *str);
+static inline bool	single_philo(t_philo *philo);
+static inline int	take_forks(t_philo *philo);
 
 void	*philo_routine(void *arg)
 {
@@ -31,15 +32,8 @@ void	*philo_routine(void *arg)
 		usleep(SPIN_TIME);
 	if (philo->id % 2 == 0)
 		wait_for(MIN_TASK_TIME / 2, philo->sim);
-	if (philo->sim->config.num_philos == 1)
-	{
-		print_state(philo, "is thinking");
-		pthread_mutex_lock(&philo->fork_l->mutex);
-		print_state(philo, "has taken a fork");
-		wait_for(philo->sim->config.time_to_die, philo->sim);
-		pthread_mutex_unlock(&philo->fork_l->mutex);
-		return (false);
-	}
+	if (single_philo(philo))
+		return (NULL);
 	while (philo->sim->active)
 	{
 		print_state(philo, "is thinking");
@@ -51,61 +45,33 @@ void	*philo_routine(void *arg)
 	return (NULL);
 }
 
-static inline bool	take_both_forks(t_philo *philo)
+static inline bool	single_philo(t_philo *philo)
 {
-	t_fork	*first_fork;
-	t_fork	*second_fork;
-	t_philo	*philos;
-	int		idx_l;
-	int		idx_r;
-
-	first_fork = philo->fork_l;
-	second_fork = philo->fork_r;
-	philos = philo->sim->philos;
-	idx_l = philo->id - 2;
-	if (idx_l < 0)
-		idx_l = philo->sim->config.num_philos - 1;
-	idx_r = philo->id;
-	if (philo->id == philo->sim->config.num_philos)
+	if (philo->sim->config.num_philos == 1)
 	{
-		first_fork = philo->fork_r;
-		second_fork = philo->fork_l;
-		idx_r = idx_l;
-		idx_l = 0;
-	}
-	while (philo->sim->active)
-	{
-		if (!philo->meals || philo->time_last_meal < philos[idx_l].time_last_meal || \
-philos[idx_l].meals == philo->sim->config.num_meals)
-		{
-			pthread_mutex_lock(&first_fork->mutex);
-			print_state(philo, "has taken a fork");
-			if (!philo->sim->active)
-			{
-				pthread_mutex_unlock(&first_fork->mutex);
-				return (false);
-			}
-			while (philo->meals && philo->time_last_meal > philos[idx_r].time_last_meal && \
-philos[idx_r].meals != philo->sim->config.num_meals)
-				usleep(SPIN_TIME);
-			if (!philo->sim->active)
-			{
-				pthread_mutex_unlock(&first_fork->mutex);
-				return (false);
-			}
-			pthread_mutex_lock(&second_fork->mutex);
-			print_state(philo, "has taken a fork");
-			return (true);
-		}
-		usleep(SPIN_TIME);
+		print_state(philo, "is thinking");
+		pthread_mutex_lock(&philo->fork_l->mutex);
+		print_state(philo, "has taken a fork");
+		wait_for(philo->sim->config.time_to_die, philo->sim);
+		pthread_mutex_unlock(&philo->fork_l->mutex);
+		return (true);
 	}
 	return (false);
 }
 
 static inline bool	eat(t_philo *philo)
 {
-	if (!take_both_forks(philo))
-		return (false);
+	int	result;
+
+	while (philo->sim->active)
+	{
+		result = take_forks(philo);
+		if (result == SUCCESS)
+			break ;
+		else if (result == EXIT)
+			return (false);
+		usleep(SPIN_TIME);
+	}
 	philo->time_last_meal = time_now();
 	philo->meals = (philo->meals + 1) % ((int64_t)INT_MAX + 1);
 	if (philo->meals == philo->sim->config.num_meals)
@@ -117,19 +83,76 @@ static inline bool	eat(t_philo *philo)
 	return (true);
 }
 
-static inline void	print_state(t_philo *philo, char *str)
+static inline int	take_forks(t_philo *philo)
+{
+	if ((!philo->meals && philo->id != philo->sim->config.num_philos) || \
+philo->time_last_meal < philo->philo_l->time_last_meal || \
+philo->philo_l->meals == philo->sim->config.num_meals)
+	{
+		pthread_mutex_lock(&philo->fork_l->mutex);
+		if (!print_state(philo, "has taken a fork"))
+		{
+			pthread_mutex_unlock(&philo->fork_l->mutex);
+			return (EXIT);
+		}
+		while (philo->meals && \
+philo->time_last_meal > philo->philo_r->time_last_meal && \
+philo->philo_r->meals != philo->sim->config.num_meals)
+{
+	printf("asd %d\n", philo->id);
+	usleep(SPIN_TIME);
+}
+		pthread_mutex_lock(&philo->fork_r->mutex);
+		if (!print_state(philo, "has taken a fork"))
+		{
+			pthread_mutex_unlock(&philo->fork_l->mutex);
+			pthread_mutex_unlock(&philo->fork_r->mutex);
+			return (EXIT);
+		}
+		return (SUCCESS);
+	}
+	if (!philo->meals || \
+philo->time_last_meal < philo->philo_r->time_last_meal || \
+philo->philo_r->meals == philo->sim->config.num_meals)
+	{
+		pthread_mutex_lock(&philo->fork_r->mutex);
+		if (!print_state(philo, "has taken a fork"))
+		{
+			pthread_mutex_unlock(&philo->fork_r->mutex);
+			return (EXIT);
+		}
+		while ((philo->meals && \
+philo->time_last_meal > philo->philo_l->time_last_meal && \
+philo->philo_l->meals != philo->sim->config.num_meals) || \
+(philo->id == philo->sim->config.num_philos && !philo->philo_l->meals))
+{
+	printf("asd %d\n", philo->id);
+	usleep(SPIN_TIME);
+}
+		pthread_mutex_lock(&philo->fork_l->mutex);
+		if (!print_state(philo, "has taken a fork"))
+		{
+			pthread_mutex_unlock(&philo->fork_l->mutex);
+			pthread_mutex_unlock(&philo->fork_r->mutex);
+			return (EXIT);
+		}
+		return (SUCCESS);
+	}
+	return (FAILURE);
+}
+
+static inline bool	print_state(t_philo *philo, char *str)
 {
 	int64_t	time;
 
-	if (!philo->sim->active)
-		return ;
 	pthread_mutex_lock(&philo->sim->mutex);
 	if (!philo->sim->active)
 	{
 		pthread_mutex_unlock(&philo->sim->mutex);
-		return ;
+		return (false);
 	}
 	time = time_now() - philo->sim->time_start;
 	printf("%ld %d %s\n", time, philo->id, str);
 	pthread_mutex_unlock(&philo->sim->mutex);
+	return (true);
 }

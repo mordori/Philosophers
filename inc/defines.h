@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:13:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/04 18:30:10 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/09 21:48:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,18 @@
 # include <limits.h>
 # include <stddef.h>
 
-# define ERROR -1
+# ifndef ERROR
+#  define ERROR -1
+# endif
+# ifndef SUCCESS
+#  define SUCCESS 1
+# endif
+# ifndef FAILURE
+#  define FAILURE 0
+# endif
+# ifndef EXIT
+#  define EXIT -1
+# endif
 # define MAX_PHILOS 200
 # define MIN_TASK_TIME 60
 # define SPIN_TIME 250
