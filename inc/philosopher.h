@@ -6,14 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:21:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/09 22:11:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/10 11:53:03 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHER_H
 # define PHILOSOPHER_H
-
-# define _GNU_SOURCE
 
 # include <unistd.h>
 # include <pthread.h>

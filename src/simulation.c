@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/04 18:29:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/10 12:23:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ philo_routine, &sim->philos[i]))
 	}
 	while (sim->threads < i)
 		wait_for(SPIN_TIME, sim);
-	if (i == sim->config.num_philos)
+	if (sim->threads == sim->config.num_philos)
 		sim->active = true;
 	sim->time_start = time_now();
 	sim->start = true;
@@ -122,8 +122,9 @@ config.time_to_sleep < MIN_TASK_TIME || \
 
 static inline bool	init_mutex(t_sim *sim)
 {
-	static int	i = 0;
+	int	i;
 
+	i = 0;
 	while (i < sim->config.num_philos)
 	{
 		if (!pthread_mutex_init(&sim->forks[i].mutex, NULL))
