@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/10 11:17:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/10 19:00:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,22 @@ time_now() - sim->time_start, sim->philos[i].id, "died");
 void	wait_for(int64_t duration, t_sim *sim)
 {
 	int64_t	current;
+	int64_t	interval;
 	int64_t	target;
-	int64_t	remaining;
 
 	current = time_now();
 	target = current + duration;
-	while (sim->active)
+	while (current < target)
 	{
-		current = time_now();
-		if (current >= target)
+		if (!sim->active)
 			return ;
-		remaining = target - current;
-		if (remaining > 2)
-			usleep((remaining - 1) * 1000);
-		else
-			usleep(SPIN_TIME);
+		interval = (target - current) * 1000;
+		if (interval <= 0)
+			return ;
+		if (interval > SPIN_TIME)
+			interval = SPIN_TIME;
+		usleep(interval);
+		current = time_now();
 	}
 }
 
@@ -99,17 +100,10 @@ void	init_philos(t_sim *sim)
 		if (sim->config.num_philos == 1)
 			return ;
 		sim->philos[i].fork_r = &sim->forks[(i + 1) % sim->config.num_philos];
-		sim->philos[i].philo_r = &sim->philos[(i + 1) % sim->config.num_philos];
-		if (i == 0)
-			sim->philos[i].philo_l = &sim->philos[sim->config.num_philos - 1];
-		else if (i == sim->config.num_philos - 1)
+		if (i == sim->config.num_philos - 1)
 		{
 			sim->philos[i].fork_l = &sim->forks[0];
 			sim->philos[i].fork_r = &sim->forks[i];
-			sim->philos[i].philo_l = &sim->philos[0];
-			sim->philos[i].philo_r = &sim->philos[i - 1];
 		}
-		else
-			sim->philos[i].philo_l = &sim->philos[i - 1];
 	}
 }
