@@ -101,3 +101,17 @@ Expected: 100 Actual:
 4 210 100 100 10: Philosophers did not eat for the correct time
 	Expected: 100 Actual: 
 
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----

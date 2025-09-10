@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/10 00:42:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/10 11:17:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	wait_for(int64_t duration, t_sim *sim)
 			return ;
 		remaining = target - current;
 		if (remaining > 2)
-			usleep((remaining - 1) *  1000);
+			usleep((remaining - 1) * 1000);
 		else
 			usleep(SPIN_TIME);
 	}

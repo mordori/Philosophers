@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/10 03:01:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/10 11:16:40 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 static inline bool	eat(t_philo *philo);
 static inline bool	print_state(t_philo *philo, char *str);
 static inline bool	is_single(t_philo *philo);
-static inline int	take_forks(t_philo *philo);
+static inline int		take_forks(t_philo *philo);
 
 void	*philo_routine(void *arg)
 {
