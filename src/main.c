@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:01:50 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/02 20:18:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/12 02:45:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@ int	main(int argc, char *argv[])
 		ft_perror("Invalid amount of arguments.");
 		return (EXIT_FAILURE);
 	}
+	memset(&sim, 0, sizeof(sim));
 	if (!init_sim(&sim, argc, argv))
 		return (EXIT_FAILURE);
 	simulate(&sim);
-	clean_sim(&sim, &sim.mutex);
+	clean_sim(&sim, &sim.mutex_print, &sim.mutex_active);
 	return (EXIT_SUCCESS);
 }

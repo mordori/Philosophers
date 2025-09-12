@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/10 19:00:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/12 03:50:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,74 +14,58 @@
 #include "simulation.h"
 #include "philosopher.h"
 
-void	monitor_philo_death(t_sim *sim)
+bool	is_active(t_sim *sim)
 {
-	int	i;
+	bool	result;
 
-	wait_for(MIN_TASK_TIME, sim);
-	while (sim->philos_dined != sim->config.num_philos)
-	{
-		usleep(SPIN_TIME);
-		i = sim->config.num_philos;
-		while (i--)
-		{
-			if (sim->philos[i].meals == sim->config.num_meals)
-				continue ;
-			if (time_now() - sim->philos[i].time_last_meal > \
-sim->config.time_to_die)
-			{
-				sim->active = false;
-				pthread_mutex_lock(&sim->mutex);
-				printf("%ld %d %s\n", \
-time_now() - sim->time_start, sim->philos[i].id, "died");
-				pthread_mutex_unlock(&sim->mutex);
-				return ;
-			}
-		}
-	}
+	pthread_mutex_lock(&sim->mutex_active);
+	result = sim->active;
+	pthread_mutex_unlock(&sim->mutex_active);
+	return (result);
 }
 
-void	wait_for(int64_t duration, t_sim *sim)
+void	wait_ms(uint64_t duration_ms, t_sim *sim)
 {
-	int64_t	current;
-	int64_t	interval;
-	int64_t	target;
+	uint64_t	target;
+	uint64_t	current;
 
 	current = time_now();
-	target = current + duration;
-	while (current < target)
+	target = current + duration_ms;
+	while (time_now() < target && is_active(sim))
 	{
-		if (!sim->active)
-			return ;
-		interval = (target - current) * 1000;
-		if (interval <= 0)
-			return ;
-		if (interval > SPIN_TIME)
-			interval = SPIN_TIME;
-		usleep(interval);
+		current = time_now();
+		if (target - current > 10)
+			usleep(10000);
+		if (target - current > 1)
+			usleep(1000);
+		else
+			usleep(SPIN_TIME);
 		current = time_now();
 	}
 }
 
-int64_t	time_now(void)
+uint64_t	time_now(void)
 {
 	struct timeval	tv;
-	int64_t			time;
+	uint64_t		time;
 
 	gettimeofday(&tv, NULL);
-	time = (int64_t)tv.tv_sec * 1000 + (int64_t)tv.tv_usec / 1000;
+	time = (uint64_t)tv.tv_sec * 1000 + (uint64_t)tv.tv_usec / 1000;
 	return (time);
 }
 
-void	clean_sim(t_sim *sim, pthread_mutex_t *sim_mutex)
+void	clean_sim(t_sim *sim, pthread_mutex_t *mutex_print, \
+pthread_mutex_t *mutex_active)
 {
 	int	i;
 
-	if (sim_mutex)
-		pthread_mutex_destroy(sim_mutex);
 	i = 0;
 	while (i < sim->num_fork_mutex_init)
 		pthread_mutex_destroy(&sim->forks[i++].mutex);
+	if (mutex_print)
+		pthread_mutex_destroy(mutex_print);
+	if (mutex_active)
+		pthread_mutex_destroy(mutex_active);
 	free(sim->philos);
 	free(sim->forks);
 }
@@ -95,7 +79,7 @@ void	init_philos(t_sim *sim)
 		sim->philos[i].id = i + 1;
 		sim->philos[i].sim = sim;
 		sim->philos[i].meals = 0;
-		sim->philos[i].time_last_meal = time_now();
+		sim->philos[i].time_last_meal = time_now() + START_TIME;
 		sim->philos[i].fork_l = &sim->forks[i];
 		if (sim->config.num_philos == 1)
 			return ;

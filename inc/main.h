@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:02:05 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/04 18:30:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/12 02:34:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MAIN_H
 
 # include <stdlib.h>
+# include <string.h>
 
 # include "defines.h"
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:13:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/09 21:48:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/11 23:04:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@
 #  define EXIT -1
 # endif
 # define MAX_PHILOS 200
-# define MIN_TASK_TIME 60
-# define SPIN_TIME 250
+# define START_TIME 10
+# define SPIN_TIME 200
 
 typedef struct s_config	t_config;
 typedef struct s_fork	t_fork;
