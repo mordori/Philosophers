@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:57:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/12 03:22:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/12 05:27:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ struct s_sim
 	t_config			config;
 	t_philo				*philos;
 	t_fork				*forks;
-	int					num_philo_mutex_init;
 	int					num_fork_mutex_init;
 	pthread_mutex_t		mutex_active;
 	pthread_mutex_t		mutex_print;

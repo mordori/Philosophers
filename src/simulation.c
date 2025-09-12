@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/12 05:11:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/12 05:27:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ bool	init_sim(t_sim *sim, const int argc, char *argv[])
 		return (false);
 	}
 	init_philos(sim);
-	sim->num_philo_mutex_init = 0;
-	sim->num_fork_mutex_init = 0;
 	if (!init_mutex(sim))
 	{
 		ft_perror("Init mutex.");
