@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/12 16:07:18 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/12 22:11:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,11 @@ void	*philo_routine(void *arg)
 	while (is_active(philo->sim))
 	{
 		print_state(philo, "is thinking");
-		usleep(SPIN_TIME);
-		// while (time_now() < philo->time_last_meal + philo->sim->config.time_to_eat + 1)
-		// 	usleep(SPIN_TIME);
-		//wait_ms(1, philo->sim);
+		while (philo->meals != 0 && time_now() < philo->time_last_meal + config.time_to_eat + 1)
+			usleep(SPIN_TIME);
 		eat(philo);
 		if (philo->meals == philo->sim->config.num_meals)
-			break;
+			break ;
 		print_state(philo, "is sleeping");
 		wait_ms(config.time_to_sleep, philo->sim);
 	}

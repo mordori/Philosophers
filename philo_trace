@@ -176,3 +176,38 @@ Expected: 100 Actual:
 -- Death Tests --
 
 ---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+2 2147483648 60 60: Program timed out. Possible infinite loop
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+2 2147483648 60 60: Program timed out. Possible infinite loop
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+3 200 65 65 5: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----

@@ -6,15 +6,15 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:58:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/12 01:12:51 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/12 18:34:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-static inline bool	ft_isdigit(int c);
 static inline uint64_t	str_to_uint64(char *str, char *end);
-static inline int64_t	str_to_int64(char *str, char *end);
+static inline int64_t		str_to_int64(char *str, char *end);
+static inline bool		ft_isdigit(int c);
 
 bool	parse_int(char *str, int64_t *value)
 {

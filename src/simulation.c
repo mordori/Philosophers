@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/12 05:27:58 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/12 22:06:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,22 +75,27 @@ static inline void	monitor_philos(t_sim *sim)
 	while (is_active(sim))
 	{
 		i = sim->config.num_philos;
-		pthread_mutex_lock(&sim->mutex_print);
-		pthread_mutex_lock(&sim->mutex_active);
 		while (i--)
 		{
 			if (time_now() - sim->philos[i].time_last_meal > \
 sim->config.time_to_die && sim->philos[i].meals != sim->config.num_meals)
 			{
+				pthread_mutex_lock(&sim->mutex_print);
+				printf("%ld %d died\n", time_now() - sim->time_start,
+					sim->philos[i].id);
+				pthread_mutex_unlock(&sim->mutex_print);
+				pthread_mutex_lock(&sim->mutex_active);
 				sim->active = false;
-				printf("%ld %d died\n", time_now() - sim->time_start, sim->philos[i].id);
+				pthread_mutex_unlock(&sim->mutex_active);
 				break ;
 			}
 		}
 		if (sim->philos_dined == sim->config.num_philos)
+		{
+			pthread_mutex_lock(&sim->mutex_active);
 			sim->active = false;
-		pthread_mutex_unlock(&sim->mutex_active);
-		pthread_mutex_unlock(&sim->mutex_print);
+			pthread_mutex_unlock(&sim->mutex_active);
+		}
 		wait_ms(1, sim);
 	}
 }

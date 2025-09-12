@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/12 03:50:44 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/12 22:17:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ void	wait_ms(uint64_t duration_ms, t_sim *sim)
 	target = current + duration_ms;
 	while (time_now() < target && is_active(sim))
 	{
-		current = time_now();
-		if (target - current > 10)
-			usleep(10000);
-		if (target - current > 1)
-			usleep(1000);
-		else
-			usleep(SPIN_TIME);
-		current = time_now();
+		// current = time_now();
+		// if (target - current > 10)
+		// 	usleep(10000);
+		// if (target - current > 2)
+		// 	usleep(1000);
+		// else
+			usleep(50);
+		//current = time_now();
 	}
 }
 
@@ -91,3 +91,32 @@ void	init_philos(t_sim *sim)
 		}
 	}
 }
+
+// void	init_philos(t_sim *sim)
+// {
+// 	static int	i = 0;
+// 	t_config	config;
+
+// 	config = sim->config;
+// 	while (i < sim->config.num_philos)
+// 	{
+// 		sim->philos[i].id = i + 1;
+// 		sim->philos[i].sim = sim;
+// 		sim->philos[i].meals = 0;
+// 		sim->philos[i].time_last_meal = time_now() + START_TIME;
+// 		sim->philos[i].fork_l = &sim->forks[i];
+// 		if (config.num_philos == 1)
+// 			return ;
+// 		if (i % 2)
+// 		{
+// 			sim->philos[i].fork_l = &sim->forks[i];
+// 			sim->philos[i].fork_r = &sim->forks[(i + 1) % config.num_philos];
+// 		}
+// 		else
+// 		{
+// 			sim->philos[i].fork_l = &sim->forks[(i + 1) % config.num_philos];
+// 			sim->philos[i].fork_r = &sim->forks[i];
+// 		}
+// 		++i;
+// 	}
+// }
