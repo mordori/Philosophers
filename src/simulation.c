@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/12 22:06:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/14 04:32:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ bool	init_sim(t_sim *sim, const int argc, char *argv[])
 		ft_perror("Init mutex.");
 		return (false);
 	}
+	sim->monitor_wait_time = 1 + sim->config.num_philos / 40;
 	return (true);
 }
 
@@ -68,20 +69,23 @@ philo_routine, &sim->philos[i]))
 
 static inline void	monitor_philos(t_sim *sim)
 {
-	int	i;
+	int			i;
+	uint64_t	last_meal;
 
 	while (time_now() < sim->time_start)
-		usleep(SPIN_TIME);
+		wait_ms(START_TIME);
 	while (is_active(sim))
 	{
 		i = sim->config.num_philos;
 		while (i--)
 		{
-			if (time_now() - sim->philos[i].time_last_meal > \
-sim->config.time_to_die && sim->philos[i].meals != sim->config.num_meals)
+			pthread_mutex_lock(&sim->mutex_active);
+			last_meal = sim->philos[i].time_last_meal;
+			pthread_mutex_unlock(&sim->mutex_active);
+			if (time_now() - last_meal > sim->config.time_to_die)
 			{
 				pthread_mutex_lock(&sim->mutex_print);
-				printf("%ld %d died\n", time_now() - sim->time_start,
+				printf("%lu %d died\n", time_now() - sim->time_start,
 					sim->philos[i].id);
 				pthread_mutex_unlock(&sim->mutex_print);
 				pthread_mutex_lock(&sim->mutex_active);
@@ -90,13 +94,11 @@ sim->config.time_to_die && sim->philos[i].meals != sim->config.num_meals)
 				break ;
 			}
 		}
+		pthread_mutex_lock(&sim->mutex_active);
 		if (sim->philos_dined == sim->config.num_philos)
-		{
-			pthread_mutex_lock(&sim->mutex_active);
 			sim->active = false;
-			pthread_mutex_unlock(&sim->mutex_active);
-		}
-		wait_ms(1, sim);
+		pthread_mutex_unlock(&sim->mutex_active);
+		wait_ms(1);
 	}
 }
 

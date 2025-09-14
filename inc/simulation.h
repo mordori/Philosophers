@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:57:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/12 05:27:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/14 03:51:23 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ struct s_sim
 	pthread_mutex_t		mutex_print;
 	volatile int64_t	philos_dined;
 	volatile bool		active;
-	volatile uint64_t	time_start;
+	uint64_t			time_start;
+	uint64_t			monitor_wait_time;
 };
 
 void	simulate(t_sim *sim);
