@@ -1,39 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   logging.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/29 17:58:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 03:32:15 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/17 00:26:03 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/17 03:26:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
-#include "string_utils.h"
+#ifndef LOGGING_H
+# define LOGGING_H
 
-bool	parse_int(char *str, int64_t *value)
+# include <pthread.h>
+# include <unistd.h>
+
+# include "defines.h"
+
+struct s_log
 {
-	int64_t	result;
-	char	endptr;
+	uint64_t	timestamp;
+	int			philo_id;
+	char		state[STATE_LENGTH];
+};
 
-	result = str_to_int64(str, &endptr);
-	if (endptr)
-		return (false);
-	*value = result;
-	return (true);
-}
-
-bool	parse_uint64(char *str, uint64_t *value)
+struct s_queue
 {
-	uint64_t	result;
-	char		endptr;
+	t_log			buffer[LOG_QUEUE_SIZE];
+	int				head;
+	int				tail;
+	pthread_mutex_t	mutex;
+	bool			done;
+};
 
-	result = str_to_uint64(str, &endptr);
-	if (endptr)
-		return (false);
-	*value = result;
-	return (true);
-}
+void	*logging(void *arg);
 
+#endif

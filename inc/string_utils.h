@@ -1,41 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosopher.h                                      :+:      :+:    :+:   */
+/*   string_utils.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/29 18:21:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 03:24:20 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/17 03:29:22 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/17 03:32:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSOPHER_H
-# define PHILOSOPHER_H
-
-# include <unistd.h>
-# include <pthread.h>
-# include <sys/time.h>
+#ifndef STRING_UTILS_H
+# define STRING_UTILS_H
 
 # include "defines.h"
 
-struct s_fork
-{
-	pthread_mutex_t	mutex;
-};
-
-struct s_philo
-{
-	t_sim				*sim;
-	t_fork				*fork_l;
-	t_fork				*fork_r;
-	int					id;
-	pthread_t			thread;
-	volatile int64_t	meals;
-	volatile uint64_t	time_last_meal;
-};
-
-void	*philo_routine(void *arg);
-void	log_state(t_philo *philo, const char *state);
+int			uint64_to_str(uint64_t n, char *buf);
+int			int_to_str(int n, char *buf);
+int64_t		str_to_int64(char *str, char *end);
+uint64_t	str_to_uint64(char *str, char *end);
 
 #endif

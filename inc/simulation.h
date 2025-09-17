@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:57:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/14 03:51:23 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/17 04:13:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <pthread.h>
+# include <string.h>
 
 # include "defines.h"
 
@@ -32,6 +33,7 @@ struct s_config
 struct s_sim
 {
 	t_config			config;
+	t_queue				*queue;
 	t_philo				*philos;
 	t_fork				*forks;
 	int					num_fork_mutex_init;
@@ -40,7 +42,7 @@ struct s_sim
 	volatile int64_t	philos_dined;
 	volatile bool		active;
 	uint64_t			time_start;
-	uint64_t			monitor_wait_time;
+	pthread_t			thread_queue;
 };
 
 void	simulate(t_sim *sim);

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:01:50 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/14 00:10:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/17 03:51:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "errors.h"
 #include "simulation.h"
 #include "simulation_utils.h"
+#include "logging.h"
 
 int	main(int argc, char *argv[])
 {
@@ -28,6 +29,6 @@ int	main(int argc, char *argv[])
 	if (!init_sim(&sim, argc, argv))
 		return (EXIT_FAILURE);
 	simulate(&sim);
-	clean_sim(&sim, &sim.mutex_print, &sim.mutex_active);
+	clean_sim(&sim, &sim.mutex_print, &sim.mutex_active, &sim.queue->mutex);
 	return (EXIT_SUCCESS);
 }
