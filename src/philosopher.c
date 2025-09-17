@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 22:01:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 00:03:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	log_state(t_philo *p, const t_state state)
 	q = p->sim->queue;
 	pthread_mutex_lock(&q->mutex);
 	ts = time_now() - p->sim->time_start;
-	next = (q->head + 1) % LOG_QUEUE_SIZE;
+	next = (q->head + 1) % QUEUE_SIZE;
 	if (next != q->tail)
 	{
 		q->logs[q->head].timestamp = ts;

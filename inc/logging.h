@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:26:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 21:38:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 01:21:19 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ struct s_log
 
 struct s_queue
 {
-	t_log			logs[LOG_QUEUE_SIZE];
-	t_log			batch[LOG_BATCH_SIZE];
-	char			buf[LOG_BUFFER_SIZE];
+	t_log			logs[QUEUE_SIZE];
+	t_log			batch[QUEUE_BATCH_SIZE];
+	char			buf[QUEUE_BUFFER_SIZE];
 	pthread_mutex_t	mutex;
 	int				count;
 	int				head;

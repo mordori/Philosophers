@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:25:54 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 22:02:52 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 01:17:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ void	*logging(void *arg)
 	{
 		q->count = 0;
 		pthread_mutex_lock(&q->mutex);
-		while (q->tail != q->head && q->count < LOG_BATCH_SIZE)
+		while (q->tail != q->head && q->count < QUEUE_BATCH_SIZE)
 		{
 			q->batch[q->count++] = q->logs[q->tail];
-			q->tail = (q->tail + 1) % LOG_QUEUE_SIZE;
+			q->tail = (q->tail + 1) % QUEUE_SIZE;
 		}
 		pthread_mutex_unlock(&q->mutex);
 		if (q->count > 0)
@@ -57,7 +57,7 @@ void	flush_queue(t_queue *q)
 		while (*s)
 			q->buf[offset++] = *s++;
 		q->buf[offset++] = '\n';
-		if (offset >= LOG_BUFFER_SIZE - STATE_LENGTH)
+		if (offset >= QUEUE_BUFFER_SIZE - LOG_LENGTH)
 		{
 			write(STDOUT_FILENO, q->buf, offset);
 			offset = 0;
