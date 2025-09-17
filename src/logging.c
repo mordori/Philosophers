@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:25:54 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 04:23:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/17 22:02:52 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,54 +19,53 @@ static inline bool	is_done(t_queue *q);
 void	*logging(void *arg)
 {
 	t_queue	*q;
-	t_log	batch[LOG_BATCH_SIZE];
-	char	buf[LOG_BUFFER_SIZE];
-	int		count;
-	size_t	offset;
-	int		i;
-	char	*s;
-	int a;
 
 	q = (t_queue *)arg;
 	while (!is_done(q) || q->head != q->tail)
 	{
+		q->count = 0;
 		pthread_mutex_lock(&q->mutex);
-		count = 0;
-		while (q->tail != q->head && count < LOG_BATCH_SIZE)
+		while (q->tail != q->head && q->count < LOG_BATCH_SIZE)
 		{
-			batch[count++] = q->buffer[q->tail];
+			q->batch[q->count++] = q->logs[q->tail];
 			q->tail = (q->tail + 1) % LOG_QUEUE_SIZE;
 		}
 		pthread_mutex_unlock(&q->mutex);
-		if (count > 0)
-		{
-			offset = 0;
-			i = 0;
-			while (i < count)
-			{
-				offset += uint64_to_str(batch[i].timestamp, buf + offset);
-				buf[offset++] = ' ';
-				offset += int_to_str(batch[i].philo_id, buf + offset);
-				buf[offset++] = ' ';
-				s = batch[i].state;
-				while (*s && offset < LOG_BUFFER_SIZE - 1)
-					buf[offset++] = *s++;
-				buf[offset++] = '\n';
-				if (offset >= LOG_BUFFER_SIZE - STATE_LENGTH)
-				{
-					a = write(STDOUT_FILENO, buf, offset);
-					offset = 0;
-				}
-				++i;
-			}
-			if (offset > 0)
-				a = write(STDOUT_FILENO, buf, offset);
-		}
+		if (q->count > 0)
+			flush_queue(q);
 		else
-			wait_ms(1);
+			usleep(1000);
 	}
-	(void)a;
 	return (NULL);
+}
+
+void	flush_queue(t_queue *q)
+{
+	size_t	offset;
+	char	*s;
+	int		i;
+
+	offset = 0;
+	i = 0;
+	while (i < q->count)
+	{
+		offset += uint64_to_str(q->batch[i].timestamp, q->buf + offset);
+		q->buf[offset++] = ' ';
+		offset += int_to_str(q->batch[i].philo_id, q->buf + offset);
+		q->buf[offset++] = ' ';
+		s = q->batch[i].state;
+		while (*s)
+			q->buf[offset++] = *s++;
+		q->buf[offset++] = '\n';
+		if (offset >= LOG_BUFFER_SIZE - STATE_LENGTH)
+		{
+			write(STDOUT_FILENO, q->buf, offset);
+			offset = 0;
+		}
+		++i;
+	}
+	if (offset > 0)
+		write(STDOUT_FILENO, q->buf, offset);
 }
 
 static inline bool	is_done(t_queue *q)

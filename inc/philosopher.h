@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:21:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 03:24:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/17 20:54:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@
 # include <sys/time.h>
 
 # include "defines.h"
+
+enum e_state
+{
+	thinking,
+	taking_a_fork,
+	eating,
+	sleeping,
+	dead
+};
 
 struct s_fork
 {
@@ -36,6 +45,6 @@ struct s_philo
 };
 
 void	*philo_routine(void *arg);
-void	log_state(t_philo *philo, const char *state);
+void	log_state(t_philo *p, const t_state state);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:13:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 03:22:05 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/17 20:22:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define LOG_BUFFER_SIZE	16384
 # define STATE_LENGTH		64
 
+typedef enum e_state	t_state;
 typedef struct s_config	t_config;
 typedef struct s_fork	t_fork;
 typedef struct s_philo	t_philo;

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 03:59:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/17 22:01:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,96 +17,103 @@
 #include "timing.h"
 #include "errors.h"
 
-static inline void	eat(t_philo *philo);
-static inline bool	is_single(t_philo *philo);
+static inline void	eat(t_philo *p);
+static inline bool	is_single(t_philo *p);
 
 void	*philo_routine(void *arg)
 {
-	t_philo		*philo;
+	t_philo		*p;
 	t_config	config;
 
-	philo = (t_philo *)arg;
-	config = philo->sim->config;
-	while (time_now() < philo->sim->time_start)
+	p = (t_philo *)arg;
+	config = p->sim->config;
+	while (time_now() < p->sim->time_start)
 		wait_ms(START_TIME);
-	if (is_single(philo))
+	if (is_single(p))
 		return (NULL);
-	if (philo->id % 2 == 0)
+	if (p->id % 2 == 0)
 		wait_ms(START_TIME);
-	while (is_active(philo->sim))
+	while (is_active(p->sim))
 	{
-		log_state(philo, "is thinking");
-		if (philo->meals != 0)
+		log_state(p, thinking);
+		if (p->meals != 0)
 			wait_ms(1);
-		eat(philo);
-		log_state(philo, "is sleeping");
-		wait_until(config.time_to_sleep, philo->sim);
+		eat(p);
+		log_state(p, sleeping);
+		wait_until(config.time_to_sleep, p->sim);
 	}
 	return (NULL);
 }
 
-void	log_state(t_philo *philo, const char *state)
+void	log_state(t_philo *p, const t_state state)
 {
-	uint64_t	ts;
-	int			next;
-	t_queue		*q;
-	int			i;
+	uint64_t			ts;
+	int					next;
+	t_queue				*q;
+	int					i;
+	static const char	*states[] = {
+		"is thinking",
+		"has taken a fork",
+		"is eating",
+		"is sleeping",
+		"died"
+	};
 
-	if (!is_active(philo->sim))
+	if (!is_active(p->sim))
 		return ;
-	q = philo->sim->queue;
-	ts = time_now() - philo->sim->time_start;
+	q = p->sim->queue;
 	pthread_mutex_lock(&q->mutex);
+	ts = time_now() - p->sim->time_start;
 	next = (q->head + 1) % LOG_QUEUE_SIZE;
 	if (next != q->tail)
 	{
-		q->buffer[q->head].timestamp = ts;
-		q->buffer[q->head].philo_id = philo->id;
+		q->logs[q->head].timestamp = ts;
+		q->logs[q->head].philo_id = p->id;
 		i = 0;
-		while (i < STATE_LENGTH - 1)
+		while (states[state][i])
 		{
-			q->buffer[q->head].state[i] = state[i];
+			q->logs[q->head].state[i] = states[state][i];
 			++i;
 		}
-		q->buffer[q->head].state[i] = '\0';
+		q->logs[q->head].state[i] = '\0';
 		q->head = next;
 	}
-	else
-		ft_perror("Log queue full.");
+	if (state == dead)
+		q->done = true;
 	pthread_mutex_unlock(&q->mutex);
 }
 
-static inline bool	is_single(t_philo *philo)
+static inline bool	is_single(t_philo *p)
 {
-	if (philo->sim->config.num_philos == 1)
+	if (p->sim->config.num_philos == 1)
 	{
-		log_state(philo, "is thinking");
-		pthread_mutex_lock(&philo->fork_l->mutex);
-		log_state(philo, "has taken a fork");
-		usleep(philo->sim->config.time_to_die * 1000);
-		pthread_mutex_unlock(&philo->fork_l->mutex);
+		log_state(p, thinking);
+		pthread_mutex_lock(&p->fork_l->mutex);
+		log_state(p, taking_a_fork);
+		usleep(p->sim->config.time_to_die * 1000);
+		pthread_mutex_unlock(&p->fork_l->mutex);
 		return (true);
 	}
 	return (false);
 }
 
-static inline void	eat(t_philo *philo)
+static inline void	eat(t_philo *p)
 {
-	pthread_mutex_lock(&philo->fork_l->mutex);
-	log_state(philo, "has taken a fork");
-	pthread_mutex_lock(&philo->fork_r->mutex);
-	log_state(philo, "has taken a fork");
-	if (is_active(philo->sim))
+	pthread_mutex_lock(&p->fork_l->mutex);
+	log_state(p, taking_a_fork);
+	pthread_mutex_lock(&p->fork_r->mutex);
+	log_state(p, taking_a_fork);
+	if (is_active(p->sim))
 	{
-		pthread_mutex_lock(&philo->sim->mutex_active);
-		philo->time_last_meal = time_now();
-		philo->meals = (philo->meals + 1) % ((int64_t)INT_MAX + 1);
-		if (philo->meals == philo->sim->config.num_meals)
-			++philo->sim->philos_dined;
-		pthread_mutex_unlock(&philo->sim->mutex_active);
-		log_state(philo, "is eating");
-		wait_until(philo->sim->config.time_to_eat, philo->sim);
+		pthread_mutex_lock(&p->sim->mutex_active);
+		p->time_last_meal = time_now();
+		p->meals = (p->meals + 1) % ((int64_t)INT_MAX + 1);
+		if (p->meals == p->sim->config.num_meals)
+			++p->sim->philos_dined;
+		pthread_mutex_unlock(&p->sim->mutex_active);
+		log_state(p, eating);
+		wait_until(p->sim->config.time_to_eat, p->sim);
 	}
-	pthread_mutex_unlock(&philo->fork_r->mutex);
-	pthread_mutex_unlock(&philo->fork_l->mutex);
+	pthread_mutex_unlock(&p->fork_r->mutex);
+	pthread_mutex_unlock(&p->fork_l->mutex);
 }

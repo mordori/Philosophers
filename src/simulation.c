@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 04:17:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/17 20:22:10 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ static inline void	monitor_philos(t_sim *sim)
 			pthread_mutex_unlock(&sim->mutex_active);
 			if (time_now() - last_meal > sim->config.time_to_die)
 			{
-				log_state(&sim->philos[i], "died");
+				log_state(&sim->philos[i], dead);
+				flush_queue(sim->queue);
 				pthread_mutex_lock(&sim->mutex_active);
 				sim->active = false;
 				pthread_mutex_unlock(&sim->mutex_active);

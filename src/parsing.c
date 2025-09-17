@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 17:58:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 03:32:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/17 18:02:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,3 @@ bool	parse_uint64(char *str, uint64_t *value)
 	*value = result;
 	return (true);
 }
-
