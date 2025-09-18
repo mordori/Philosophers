@@ -6,11 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:24:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/12 02:38:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 21:10:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
+#include "simulation.h"
 
 /**
  * @brief Handles errors by printing a message and exiting.
@@ -29,4 +30,12 @@ void	ft_perror(char *msg)
 	bytes = write(STDERR_FILENO, msg, len);
 	bytes = write(STDERR_FILENO, "\n", 1);
 	(void)bytes;
+}
+
+void	sim_error(t_sim *sim)
+{
+	ft_perror("Failed to create a thread.");
+	pthread_mutex_lock(&sim->mutex_active);
+	sim->error = true;
+	pthread_mutex_unlock(&sim->mutex_active);
 }

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 03:37:40 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 21:45:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,19 @@ void	simulate(t_sim *sim)
 {
 	int	i;
 
-	sim->time_start = time_now() + START_TIME;
-	sim->active = true;
+	sim->time_start = time_now();
 	i = 0;
 	while (i < sim->config.num_philos)
 	{
-		if (pthread_create(&sim->philos[i].thread, NULL,
-			philo_routine, &sim->philos[i]))
+		if (\
+pthread_create(&sim->philos[i].thread, NULL, philo_routine, &sim->philos[i]))
 			break ;
 		++i;
 	}
 	if (i == sim->config.num_philos)
 	{
 		if (pthread_create(&sim->thread_queue, NULL, logging, sim->queue))
-			ft_perror("Failed to create a thread.");
+			sim_error(sim);
 		else
 		{
 			monitor_philos(sim);
@@ -71,7 +70,7 @@ void	simulate(t_sim *sim)
 		}
 	}
 	else
-		ft_perror("Failed to create a thread.");
+		sim_error(sim);
 	while (i--)
 		pthread_join(sim->philos[i].thread, NULL);
 }
@@ -80,17 +79,18 @@ static inline void	monitor_philos(t_sim *sim)
 {
 	int	i;
 
-	while (time_now() < sim->time_start)
-		wait_ms(START_TIME);
-	while (is_active(sim))
+	while (!threads_init(sim))
+		usleep(SPIN_TIME);
+	while (sim->active)
 	{
+		wait_ms(1);
 		pthread_mutex_lock(&sim->mutex_active);
 		sim->active = (sim->philos_dined != sim->config.num_philos);
 		i = sim->config.num_philos;
 		while (i--)
 		{
-			if (time_now() - sim->philos[i].time_last_meal >
-				sim->config.time_to_die)
+			if (\
+time_now() - sim->philos[i].time_last_meal > sim->config.time_to_die)
 			{
 				log_state(&sim->philos[i], dead);
 				sim->active = false;
@@ -101,12 +101,14 @@ static inline void	monitor_philos(t_sim *sim)
 		sim->queue->done = !sim->active;
 		pthread_mutex_unlock(&sim->queue->mutex);
 		pthread_mutex_unlock(&sim->mutex_active);
-		wait_ms(MONITOR_TIME);
 	}
 }
 
 static inline bool	init_config(t_sim *sim, const int argc, char *argv[])
 {
+	bool	result;
+
+	result = true;
 	sim->config.num_meals = -1;
 	if (\
 !parse_int(argv[1], &sim->config.num_philos) || \
@@ -119,12 +121,24 @@ static inline bool	init_config(t_sim *sim, const int argc, char *argv[])
 		return (false);
 	}
 	if (sim->config.num_philos < 1)
+	{
 		ft_perror("Invalid amount of philosophers.");
+		result = false;
+	}
+	if (\
+sim->config.time_to_die < 1 || \
+sim->config.time_to_eat < 1 || \
+sim->config.time_to_sleep < 1)
+	{
+		ft_perror("Invalid amount of time.");
+		result = false;
+	}
 	if (argc == 6 && sim->config.num_meals < 1)
+	{
 		ft_perror("Invalid amount of meals.");
-	if (sim->config.num_philos < 1 || (argc == 6 && sim->config.num_meals < 1))
-		return (false);
-	return (true);
+		result = false;
+	}
+	return (result);
 }
 
 static inline bool	init_mutex(t_sim *sim)

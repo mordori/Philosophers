@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:26:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 02:38:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 21:02:10 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ struct s_queue
 	int				head;
 	int				tail;
 	bool			done;
+	bool			init;
 };
 
+void	log_state(t_philo *p, const t_state state);
 void	*logging(void *arg);
 
 #endif

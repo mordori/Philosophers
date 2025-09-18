@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:57:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 02:53:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 21:56:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ struct s_sim
 	t_queue				*queue;
 	t_philo				*philos;
 	t_fork				*forks;
+	int					threads;
+	int					threads_init;
 	int					num_fork_mutex_init;
 	bool				mutex_active_init;
 	bool				mutex_queue_init;
@@ -44,6 +46,7 @@ struct s_sim
 	volatile bool		active;
 	uint64_t			time_start;
 	pthread_t			thread_queue;
+	bool				error;
 };
 
 void	simulate(t_sim *sim);

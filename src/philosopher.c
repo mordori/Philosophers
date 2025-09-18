@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 03:15:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 22:14:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "timing.h"
 #include "errors.h"
 
+static inline void	wait_until_start(t_philo *p);
 static inline void	eat(t_philo *p);
 static inline bool	is_single(t_philo *p);
 
@@ -27,12 +28,9 @@ void	*philo_routine(void *arg)
 
 	p = (t_philo *)arg;
 	config = p->sim->config;
-	while (time_now() < p->sim->time_start)
-		wait_ms(START_TIME);
+	wait_until_start(p);
 	if (is_single(p))
 		return (NULL);
-	if (p->id % 2 == 0)
-		wait_ms(START_TIME);
 	while (is_active(p->sim))
 	{
 		log_state(p, thinking);
@@ -45,36 +43,32 @@ void	*philo_routine(void *arg)
 	return (NULL);
 }
 
-void	log_state(t_philo *p, const t_state state)
+static inline void	wait_until_start(t_philo *p)
 {
-	int			next;
-	t_queue		*q;
-	static char	*states[] = {
-		"is thinking",
-		"has taken a fork",
-		"is eating",
-		"is sleeping",
-		"died"
-	};
+	bool	delay;
 
-	q = p->sim->queue;
-	pthread_mutex_lock(&q->mutex);
-	if (q->done)
+	pthread_mutex_lock(&p->sim->mutex_active);
+	++p->sim->threads;
+	pthread_mutex_unlock(&p->sim->mutex_active);
+	while (!threads_init(p->sim))
+		usleep(SPIN_TIME);
+	if (p->id % 2 == 0)
 	{
-		pthread_mutex_unlock(&q->mutex);
-		return ;
+		while (true)
+		{
+			usleep(SPIN_TIME);
+			pthread_mutex_lock(&p->sim->mutex_active);
+			delay = (p->sim->threads_init != p->sim->config.num_philos / 2 + \
+(p->sim->config.num_philos % 2));
+			pthread_mutex_unlock(&p->sim->mutex_active);
+			if (!delay)
+				break ;
+		}
 	}
-	next = (q->head + 1) % QUEUE_SIZE;
-	if (next != q->tail)
-	{
-		q->logs[q->head].timestamp = time_now() - p->sim->time_start;
-		q->logs[q->head].philo_id = p->id;
-		q->logs[q->head].state = states[state];
-		q->head = next;
-	}
-	if (state == dead)
-		q->done = true;
-	pthread_mutex_unlock(&q->mutex);
+	pthread_mutex_lock(&p->sim->mutex_active);
+	if (p->id % 2)
+		++p->sim->threads_init;
+	pthread_mutex_unlock(&p->sim->mutex_active);
 }
 
 static inline bool	is_single(t_philo *p)

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 02:54:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 21:44:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,33 @@ bool	is_active(t_sim *sim)
 	bool	result;
 
 	pthread_mutex_lock(&sim->mutex_active);
-	result = sim->active;
+	result = (sim->active && !sim->error);
+	pthread_mutex_unlock(&sim->mutex_active);
+	return (result);
+}
+
+bool	threads_init(t_sim *sim)
+{
+	bool	result;
+	int		i;
+
+	pthread_mutex_lock(&sim->mutex_active);
+	pthread_mutex_lock(&sim->queue->mutex);
+	result = (sim->threads == sim->config.num_philos && sim->queue->init);
+	if (result && !sim->active && !sim->error)
+	{
+		sim->time_start = time_now();
+		i = 0;
+		while (i < sim->config.num_philos)
+		{
+			sim->philos[i].time_last_meal = sim->time_start;
+			++i;
+		}
+		sim->active = true;
+	}
+	if (sim->error)
+		result = true;
+	pthread_mutex_unlock(&sim->queue->mutex);
 	pthread_mutex_unlock(&sim->mutex_active);
 	return (result);
 }
@@ -67,7 +93,7 @@ static inline bool	init_philo(t_sim *sim, int i)
 	p->id = i + 1;
 	p->sim = sim;
 	p->meals = 0;
-	p->time_last_meal = time_now() + START_TIME;
+	p->time_last_meal = time_now();
 	p->fork_l = &sim->forks[i];
 	if (config->num_philos == 1)
 		return (false);
