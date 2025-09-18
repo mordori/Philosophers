@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 00:03:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 03:15:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,9 @@ void	*philo_routine(void *arg)
 
 void	log_state(t_philo *p, const t_state state)
 {
-	uint64_t			ts;
-	int					next;
-	t_queue				*q;
-	int					i;
-	static const char	*states[] = {
+	int			next;
+	t_queue		*q;
+	static char	*states[] = {
 		"is thinking",
 		"has taken a fork",
 		"is eating",
@@ -59,23 +57,19 @@ void	log_state(t_philo *p, const t_state state)
 		"died"
 	};
 
-	if (!is_active(p->sim))
-		return ;
 	q = p->sim->queue;
 	pthread_mutex_lock(&q->mutex);
-	ts = time_now() - p->sim->time_start;
+	if (q->done)
+	{
+		pthread_mutex_unlock(&q->mutex);
+		return ;
+	}
 	next = (q->head + 1) % QUEUE_SIZE;
 	if (next != q->tail)
 	{
-		q->logs[q->head].timestamp = ts;
+		q->logs[q->head].timestamp = time_now() - p->sim->time_start;
 		q->logs[q->head].philo_id = p->id;
-		i = 0;
-		while (states[state][i])
-		{
-			q->logs[q->head].state[i] = states[state][i];
-			++i;
-		}
-		q->logs[q->head].state[i] = '\0';
+		q->logs[q->head].state = states[state];
 		q->head = next;
 	}
 	if (state == dead)

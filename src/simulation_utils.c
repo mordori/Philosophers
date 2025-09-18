@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 20:31:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 02:54:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,17 @@ bool	is_active(t_sim *sim)
 	return (result);
 }
 
-void	clean_sim(t_sim *sim,
-	pthread_mutex_t *mutex_print,
-	pthread_mutex_t *mutex_active,
-	pthread_mutex_t *mutex_queue)
+void	clean_sim(t_sim *sim)
 {
 	int	i;
 
 	i = 0;
 	while (i < sim->num_fork_mutex_init)
 		pthread_mutex_destroy(&sim->forks[i++].mutex);
-	if (mutex_print)
-		pthread_mutex_destroy(mutex_print);
-	if (mutex_active)
-		pthread_mutex_destroy(mutex_active);
-	if (mutex_queue)
-		pthread_mutex_destroy(mutex_queue);
+	if (sim->mutex_active_init)
+		pthread_mutex_destroy(&sim->mutex_active);
+	if (sim->mutex_queue_init)
+		pthread_mutex_destroy(&sim->queue->mutex);
 	free(sim->philos);
 	free(sim->forks);
 	free(sim->queue);

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:25:54 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 01:17:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 02:23:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,22 @@
 #include "timing.h"
 #include "string_utils.h"
 
-static inline bool	is_done(t_queue *q);
+static inline void	flush_queue(t_queue *q);
 
 void	*logging(void *arg)
 {
 	t_queue	*q;
 
 	q = (t_queue *)arg;
-	while (!is_done(q) || q->head != q->tail)
+	while (true)
 	{
-		q->count = 0;
 		pthread_mutex_lock(&q->mutex);
+		if (q->done && q->head == q->tail)
+		{
+			pthread_mutex_unlock(&q->mutex);
+			break ;
+		}
+		q->count = 0;
 		while (q->tail != q->head && q->count < QUEUE_BATCH_SIZE)
 		{
 			q->batch[q->count++] = q->logs[q->tail];
@@ -39,7 +44,7 @@ void	*logging(void *arg)
 	return (NULL);
 }
 
-void	flush_queue(t_queue *q)
+static inline void	flush_queue(t_queue *q)
 {
 	size_t	offset;
 	char	*s;
@@ -66,14 +71,4 @@ void	flush_queue(t_queue *q)
 	}
 	if (offset > 0)
 		write(STDOUT_FILENO, q->buf, offset);
-}
-
-static inline bool	is_done(t_queue *q)
-{
-	bool	result;
-
-	pthread_mutex_lock(&q->mutex);
-	result = q->done;
-	pthread_mutex_unlock(&q->mutex);
-	return (result);
 }

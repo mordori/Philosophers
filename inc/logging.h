@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:26:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 01:21:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/18 02:38:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ struct s_log
 {
 	uint64_t	timestamp;
 	int			philo_id;
-	char		state[STATE_LENGTH];
+	char		*state;
 };
 
 struct s_queue
@@ -38,6 +38,5 @@ struct s_queue
 };
 
 void	*logging(void *arg);
-void	flush_queue(t_queue *q);
 
 #endif
