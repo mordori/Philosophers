@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 04:46:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 15:13:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,14 @@ bool	is_active(t_sim *sim)
 /**
  * @brief Checks if all of the created threads are running.
  *
- * @note Activates the simulation and initializes the timestamps.
+ * @note Activates the simulation and initializes the timestamps for the
+ * simulation start and last meals of the philosophers.
  *
  * @param sim Pointer to the simulation.
  *
- * @return Running status of the created threads.
+ * @return Running status of the created threads. Also sets the status when an
+ * error has occurred in intializing the threads so that the existing ones will
+ * get terminated and joined.
  */
 bool	all_threads_running(t_sim *sim)
 {
@@ -119,7 +122,8 @@ void	init_philos(t_sim *sim)
  * @param sim Pointer to the simulation.
  * @param i Index of a philosopher in the array.
  *
- * @return Status whether there is only one philosopher to perform early exit.
+ * @return Status whether there is only one philosopher to perform an early
+ * exit in the initialization loop.
  */
 static inline bool	init_philo(t_sim *sim, int i)
 {
@@ -131,7 +135,6 @@ static inline bool	init_philo(t_sim *sim, int i)
 	p->id = i + 1;
 	p->sim = sim;
 	p->meals = 0;
-	p->time_last_meal = time_now();
 	p->fork_l = &sim->forks[i];
 	if (config->num_philos == 1)
 		return (false);

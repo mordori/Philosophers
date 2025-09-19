@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:25:54 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 04:55:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 14:56:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "timing.h"
 #include "philosopher.h"
 #include "simulation.h"
+#include "simulation_utils.h"
 #include "string_utils.h"
 
 static inline void	make_batch(t_queue *q);
@@ -64,7 +65,7 @@ void	log_state(t_philo *p, const t_state state)
  *
  * @param arg Pointer to the queue containing the logs.
  *
- * @return NULL.
+ * @return Null pointer.
  */
 void	*logging(void *arg)
 {

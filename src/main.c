@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:01:50 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 02:51:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:51:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  * thread. There is one fork per philosopher, but in order to eat a philosopher
  * needs two. So they have to take turns in eating. None should die from
  * starvation if the provided parameters consider the combined time of the
- * actions. The philosophers are not aware of one another.
+ * actions. The philosophers are not allowed to communicate with each other.
  *
  * Resources shared between threads are locked with mutex to avoid data races.
  *

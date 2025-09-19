@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 05:12:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 14:58:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ static inline void	monitor_philos(t_sim *sim)
 		usleep(SPIN_TIME);
 	while (sim->active)
 	{
-		wait_ms(1);
+		usleep(1000);
 		pthread_mutex_lock(&sim->mutex_active);
 		sim->active = (sim->philos_dined != sim->config.num_philos);
 		i = sim->config.num_philos;
@@ -193,7 +193,7 @@ sim->config.time_to_sleep < 1)
 }
 
 /**
- * @brief Initializes the mutex.
+ * @brief Initializes all of the mutex.
  *
  * @note Counts and stores the number of fork mutex initialized for clean-up.
  *

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 02:49:55 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 05:20:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:53:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,6 @@ void	wait_until(uint64_t duration, t_sim *sim)
 		else
 			usleep(SLEEP_TIME);
 	}
-}
-
-/**
- * @brief Sleeps the process for a specified duration in milliseconds.
- *
- * Waiting is done in small chuncks to improve precision.
- *
- * @note Suitable for short sleeps.
- *
- * @param duration Time in milliseconds to be waited.
- */
-void	wait_ms(uint64_t duration)
-{
-	uint64_t	time_end;
-
-	time_end = time_now() + duration;
-	while (time_now() < time_end)
-		usleep(SLEEP_TIME);
 }
 
 /**
