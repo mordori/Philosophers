@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 15:01:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 18:23:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 static inline void	wait_until_start(t_philo *p);
 static inline void	eat(t_philo *p);
 static inline bool	is_single(t_philo *p);
-static inline bool	take_forks(t_philo *p);
 
 /**
  * @brief Philosopher thread routine.
@@ -46,10 +45,8 @@ void	*philo_routine(void *arg)
 	{
 		log_state(p, thinking);
 		if (p->meals != 0 )
-			usleep(SLEEP_TIME);
+			usleep(SPIN_TIME);
 		eat(p);
-		if (!is_active(p->sim))
-			break ;
 		log_state(p, sleeping);
 		wait_until(config.time_to_sleep, p->sim);
 	}
@@ -133,8 +130,10 @@ static inline bool	is_single(t_philo *p)
  */
 static inline void	eat(t_philo *p)
 {
-	if (!take_forks(p))
-		return ;
+	pthread_mutex_lock(&p->fork_l->mutex);
+	log_state(p, taking_a_fork);
+	pthread_mutex_lock(&p->fork_r->mutex);
+	log_state(p, taking_a_fork);
 	pthread_mutex_lock(&p->sim->mutex_active);
 	if (!p->sim->active)
 	{
@@ -152,31 +151,4 @@ static inline void	eat(t_philo *p)
 	wait_until(p->sim->config.time_to_eat, p->sim);
 	pthread_mutex_unlock(&p->fork_r->mutex);
 	pthread_mutex_unlock(&p->fork_l->mutex);
-}
-
-/**
- * @brief Takes the forks with mutex.
- *
- * @param p Pointer to the philosopher.
- *
- * @return Success of the operation.
- */
-static inline bool	take_forks(t_philo *p)
-{
-	pthread_mutex_lock(&p->fork_l->mutex);
-	if (!is_active(p->sim))
-	{
-		pthread_mutex_unlock(&p->fork_l->mutex);
-		return (false);
-	}
-	log_state(p, taking_a_fork);
-	pthread_mutex_lock(&p->fork_r->mutex);
-	if (!is_active(p->sim))
-	{
-		pthread_mutex_unlock(&p->fork_r->mutex);
-		pthread_mutex_unlock(&p->fork_l->mutex);
-		return (false);
-	}
-	log_state(p, taking_a_fork);
-	return (true);
 }
