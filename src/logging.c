@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:25:54 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 22:29:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 04:55:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,14 @@
 static inline void	make_batch(t_queue *q);
 static inline void	flush_batch(t_queue *q);
 
+/**
+ * @brief Constructs a log and adds it to the queue.
+ *
+ * @note Flags the queue to be done if a philosopher's state is dead.
+ *
+ * @param p Philosopher containing it's id.
+ * @param state State of the philosopher to be logged.
+ */
 void	log_state(t_philo *p, const t_state state)
 {
 	int			next;
@@ -46,6 +54,18 @@ void	log_state(t_philo *p, const t_state state)
 	pthread_mutex_unlock(&q->mutex);
 }
 
+/**
+ * @brief Logging thread routine.
+ *
+ * Constructs batches from the recorded logs and flushes them until the queue
+ * has been emptied.
+ *
+ * @note Performed periodically every 1 millisecond.
+ *
+ * @param arg Pointer to the queue containing the logs.
+ *
+ * @return NULL.
+ */
 void	*logging(void *arg)
 {
 	t_queue	*q;
@@ -54,6 +74,8 @@ void	*logging(void *arg)
 	pthread_mutex_lock(&q->mutex);
 	q->init = true;
 	pthread_mutex_unlock(&q->mutex);
+	while (!all_threads_running(q->sim))
+		usleep(SPIN_TIME);
 	while (true)
 	{
 		pthread_mutex_lock(&q->mutex);
@@ -72,6 +94,12 @@ void	*logging(void *arg)
 	return (NULL);
 }
 
+/**
+ * @brief Constructs a batch with logs from the queue and moves the queue tail
+ * index.
+ *
+ * @param q Pointer to the queue.
+ */
 static inline void	make_batch(t_queue *q)
 {
 	q->count = 0;
@@ -82,6 +110,12 @@ static inline void	make_batch(t_queue *q)
 	}
 }
 
+/**
+ * @brief Converts the logs from a batch to a buffered string and writes it to
+ * STDOUT.
+ *
+ * @param q Pointer to the queue.
+ */
 static inline void	flush_batch(t_queue *q)
 {
 	size_t	offset;

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 21:44:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 04:46:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@
 
 static inline bool	init_philo(t_sim *sim, int i);
 
+/**
+ * @brief Performs activity check of the simulation.
+ *
+ * @param sim Pointer to the simulation.
+ *
+ * @return Simulation activity status.
+ */
 bool	is_active(t_sim *sim)
 {
 	bool	result;
@@ -28,14 +35,24 @@ bool	is_active(t_sim *sim)
 	return (result);
 }
 
-bool	threads_init(t_sim *sim)
+/**
+ * @brief Checks if all of the created threads are running.
+ *
+ * @note Activates the simulation and initializes the timestamps.
+ *
+ * @param sim Pointer to the simulation.
+ *
+ * @return Running status of the created threads.
+ */
+bool	all_threads_running(t_sim *sim)
 {
 	bool	result;
 	int		i;
 
 	pthread_mutex_lock(&sim->mutex_active);
 	pthread_mutex_lock(&sim->queue->mutex);
-	result = (sim->threads == sim->config.num_philos && sim->queue->init);
+	result = \
+(sim->threads_running == sim->config.num_philos && sim->queue->init);
 	if (result && !sim->active && !sim->error)
 	{
 		sim->time_start = time_now();
@@ -54,6 +71,11 @@ bool	threads_init(t_sim *sim)
 	return (result);
 }
 
+/**
+ * @brief Destroys all initialized mutex and frees allocated memory.
+ *
+ * @param sim Pointer to the simulation.
+ */
 void	clean_sim(t_sim *sim)
 {
 	int	i;
@@ -70,6 +92,11 @@ void	clean_sim(t_sim *sim)
 	free(sim->queue);
 }
 
+/**
+ * @brief Initializes all the philosophers.
+ *
+ * @param sim Pointer to the simulation.
+ */
 void	init_philos(t_sim *sim)
 {
 	int	i;
@@ -83,6 +110,17 @@ void	init_philos(t_sim *sim)
 	}
 }
 
+/**
+ * @brief Initializes a philosopher.
+ *
+ * @note Fork order is reversed for odd and even philosophers to avoid
+ * deadlocks.
+ *
+ * @param sim Pointer to the simulation.
+ * @param i Index of a philosopher in the array.
+ *
+ * @return Status whether there is only one philosopher to perform early exit.
+ */
 static inline bool	init_philo(t_sim *sim, int i)
 {
 	t_philo		*p;

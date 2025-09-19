@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 03:28:40 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 19:46:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 02:26:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 
 static inline bool	ft_isdigit(int c);
 
+/**
+ * @brief Converts a string to an unsigned 64-bit integer.
+ *
+ * @param str Input string.
+ * @param end Pointer to a character where the function stores the next
+ * character after the parsed number. If parsing succeeds, it is set to '\0'.
+ *
+ * @return Parsed unsigned 64-bit integer value. Returns 0 on failure or if
+ * the number is out of range.
+ */
 uint64_t	str_to_uint64(char *str, char *end)
 {
 	uint64_t	number;
@@ -39,6 +49,16 @@ uint64_t	str_to_uint64(char *str, char *end)
 	return (number);
 }
 
+/**
+ * @brief Converts a string to a signed 64-bit integer.
+ *
+ * @param str Input string.
+ * @param end Pointer to a character where the function stores the next
+ * character after the parsed number. If parsing succeeds, it is set to '\0'.
+ *
+ * @return Parsed signed 64-bit integer value. Returns 0 on failure or if
+ * the number is out of range.
+ */
 int64_t	str_to_int64(char *str, char *end)
 {
 	int		sign;
@@ -59,7 +79,7 @@ int64_t	str_to_int64(char *str, char *end)
 (sign == -1 && number > (((-(INT64_MIN + (*str - '0'))) / 10))))
 		{
 			*end = 'e';
-			return (ERROR);
+			return (0);
 		}
 		number = number * 10 + (*str++ - '0');
 		*end = *str;
@@ -67,11 +87,19 @@ int64_t	str_to_int64(char *str, char *end)
 	return (sign * number);
 }
 
-int	uint64_to_str(uint64_t n, char *buf)
+/**
+ * @brief Converts an unsigned 64-bit integer to a string.
+ *
+ * @param n Unsigned 64-bit integer to convert.
+ * @param buf Buffer where the string result is written.
+ *
+ * @return The number of characters written.
+ */
+size_t	uint64_to_str(uint64_t n, char *buf)
 {
-	char	temp[20];
-	int		i;
-	int		j;
+	char	temp[INT64_LENGTH];
+	size_t	i;
+	size_t	j;
 
 	if (!n)
 	{
@@ -93,12 +121,20 @@ int	uint64_to_str(uint64_t n, char *buf)
 	return (i);
 }
 
-int	int_to_str(int n, char *buf)
+/**
+ * @brief Converts an signed 64-bit integer to a string.
+ *
+ * @param n Signed 64-bit integer to convert.
+ * @param buf Buffer where the string result is written.
+ *
+ * @return The number of characters written.
+ */
+size_t	int_to_str(int n, char *buf)
 {
-	char	temp[11];
-	int		i;
-	int		j;
-	int		k;
+	char	temp[INT32_LENGTH];
+	size_t	i;
+	size_t	j;
+	size_t	k;
 
 	i = 0;
 	if (!n)
@@ -126,6 +162,7 @@ int	int_to_str(int n, char *buf)
  * Checks if `c` is a numeric character.
  *
  * @param c Character to be checked for.
+ *
  * @return True if successful, else false.
  */
 static inline bool	ft_isdigit(int c)

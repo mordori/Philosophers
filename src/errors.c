@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:24:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 21:10:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 05:22:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "simulation.h"
 
 /**
- * @brief Handles errors by printing a message and exiting.
+ * @brief Prints an error message to STDERR.
  *
  * @param msg Error message to display.
  */
@@ -32,6 +32,12 @@ void	ft_perror(char *msg)
 	(void)bytes;
 }
 
+/**
+ * @brief Flags an error occurrance in the simulation and prints an error
+ * message to STDERR.
+ *
+ * @param sim Pointer to the simulation.
+ */
 void	sim_error(t_sim *sim)
 {
 	ft_perror("Failed to create a thread.");

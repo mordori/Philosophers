@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 22:14:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 04:39:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,16 @@ static inline void	wait_until_start(t_philo *p);
 static inline void	eat(t_philo *p);
 static inline bool	is_single(t_philo *p);
 
+/**
+ * @brief Philosopher thread routine.
+ *
+ * Rotates and logs philosopher's states while the simulation is active. Waits
+ * until all of the threads are running.
+ *
+ * @param arg Pointer to the philosopher.
+ *
+ * @return NULL.
+ */
 void	*philo_routine(void *arg)
 {
 	t_philo		*p;
@@ -34,7 +44,7 @@ void	*philo_routine(void *arg)
 	while (is_active(p->sim))
 	{
 		log_state(p, thinking);
-		if (p->meals != 0)
+		if (p->meals != 0 )
 			wait_ms(1);
 		eat(p);
 		log_state(p, sleeping);
@@ -43,34 +53,53 @@ void	*philo_routine(void *arg)
 	return (NULL);
 }
 
+/**
+ * @brief Waits until all of the threads are running.
+ *
+ * Further delays all even philosophers until odd ones are done waiting.
+ *
+ * @param p Pointer to the philosopher.
+ */
 static inline void	wait_until_start(t_philo *p)
 {
 	bool	delay;
 
 	pthread_mutex_lock(&p->sim->mutex_active);
-	++p->sim->threads;
+	++p->sim->threads_running;
 	pthread_mutex_unlock(&p->sim->mutex_active);
-	while (!threads_init(p->sim))
+	while (!all_threads_running(p->sim))
 		usleep(SPIN_TIME);
 	if (p->id % 2 == 0)
 	{
 		while (true)
 		{
-			usleep(SPIN_TIME);
 			pthread_mutex_lock(&p->sim->mutex_active);
-			delay = (p->sim->threads_init != p->sim->config.num_philos / 2 + \
-(p->sim->config.num_philos % 2));
+			delay = (\
+p->sim->threads_odd_init != \
+p->sim->config.num_philos / 2 + (p->sim->config.num_philos % 2) && \
+!p->sim->error);
 			pthread_mutex_unlock(&p->sim->mutex_active);
 			if (!delay)
 				break ;
+			usleep(SPIN_TIME);
 		}
+		usleep(SPIN_TIME);
 	}
-	pthread_mutex_lock(&p->sim->mutex_active);
 	if (p->id % 2)
-		++p->sim->threads_init;
-	pthread_mutex_unlock(&p->sim->mutex_active);
+	{
+		pthread_mutex_lock(&p->sim->mutex_active);
+		++p->sim->threads_odd_init;
+		pthread_mutex_unlock(&p->sim->mutex_active);
+	}
 }
 
+/**
+ * @brief Checks for and handles the case where there is only one philosopher.
+ *
+ * @param p Pointer to the philosopher.
+ *
+ * @return Status whether there is only one philosopher.
+ */
 static inline bool	is_single(t_philo *p)
 {
 	if (p->sim->config.num_philos == 1)
@@ -85,6 +114,13 @@ static inline bool	is_single(t_philo *p)
 	return (false);
 }
 
+/**
+ * @brief Grabs the forks, sets the timestamp for the meal, informs the
+ * simulation when at least the provided amount of meals was eaten, and logs
+ * all the states.
+ *
+ * @param p Pointer to the philosopher.
+ */
 static inline void	eat(t_philo *p)
 {
 	pthread_mutex_lock(&p->fork_l->mutex);
@@ -93,9 +129,9 @@ static inline void	eat(t_philo *p)
 	log_state(p, taking_a_fork);
 	if (is_active(p->sim))
 	{
+		p->meals = (p->meals + 1) % ((int64_t)INT_MAX + 1);
 		pthread_mutex_lock(&p->sim->mutex_active);
 		p->time_last_meal = time_now();
-		p->meals = (p->meals + 1) % ((int64_t)INT_MAX + 1);
 		if (p->meals == p->sim->config.num_meals)
 			++p->sim->philos_dined;
 		pthread_mutex_unlock(&p->sim->mutex_active);

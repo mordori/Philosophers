@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 21:45:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 05:12:24 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,23 @@ static inline void	monitor_philos(t_sim *sim);
 static inline bool	init_config(t_sim *sim, const int argc, char *argv[]);
 static inline bool	init_mutex(t_sim *sim);
 
+/**
+ * @brief Initializes the simulation.
+ *
+ * - Parses and initializes the configuration
+ *
+ * - Allocates memory
+ *
+ * - Zero-initializes the log queue
+ *
+ * - Initializes the mutex
+ *
+ * @param sim Pointer to the simulation.
+ * @param argc Number of program arguments.
+ * @param argv Array containing the program arguments.
+ *
+ * @return Success of the initialization.
+ */
 bool	init_sim(t_sim *sim, const int argc, char *argv[])
 {
 	if (!init_config(sim, argc, argv))
@@ -36,6 +53,7 @@ bool	init_sim(t_sim *sim, const int argc, char *argv[])
 		return (false);
 	}
 	memset(sim->queue, 0, sizeof(t_queue));
+	sim->queue->sim = sim;
 	init_philos(sim);
 	if (!init_mutex(sim))
 	{
@@ -46,11 +64,21 @@ bool	init_sim(t_sim *sim, const int argc, char *argv[])
 	return (true);
 }
 
+/**
+ * @brief Begins the simulation.
+ *
+ * - Creates the threads
+ *
+ * - Begins the monitoring routine
+ *
+ * - Joins all created threads
+ *
+ * @param sim Pointer to the simulation.
+ */
 void	simulate(t_sim *sim)
 {
 	int	i;
 
-	sim->time_start = time_now();
 	i = 0;
 	while (i < sim->config.num_philos)
 	{
@@ -75,11 +103,25 @@ pthread_create(&sim->philos[i].thread, NULL, philo_routine, &sim->philos[i]))
 		pthread_join(sim->philos[i].thread, NULL);
 }
 
+/**
+ * @brief Philosopher monitoring routine.
+ *
+ * Flags the simulation to be over if either:
+ *
+ * - All of the philosophers have eaten at least the optionally provided amount
+ * of meals
+ *
+ * - A philosopher has died from starvation
+ *
+ * @note Performed periodically every 1 millisecond.
+ *
+ * @param sim Pointer to the simulation.
+ */
 static inline void	monitor_philos(t_sim *sim)
 {
 	int	i;
 
-	while (!threads_init(sim))
+	while (!all_threads_running(sim))
 		usleep(SPIN_TIME);
 	while (sim->active)
 	{
@@ -104,6 +146,15 @@ time_now() - sim->philos[i].time_last_meal > sim->config.time_to_die)
 	}
 }
 
+/**
+ * @brief Parses and initializes the configuration.
+ *
+ * @param sim Pointer to the simulation.
+ * @param argc Number of program arguments.
+ * @param argv Array containing the program arguments.
+ *
+ * @return Success of the parsing.
+ */
 static inline bool	init_config(t_sim *sim, const int argc, char *argv[])
 {
 	bool	result;
@@ -141,6 +192,15 @@ sim->config.time_to_sleep < 1)
 	return (result);
 }
 
+/**
+ * @brief Initializes the mutex.
+ *
+ * @note Counts and stores the number of fork mutex initialized for clean-up.
+ *
+ * @param sim Pointer to the simulation.
+ *
+ * @return Success of the initialization.
+ */
 static inline bool	init_mutex(t_sim *sim)
 {
 	int	i;

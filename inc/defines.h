@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:13:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 21:58:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/19 04:18:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,17 @@
 # include <limits.h>
 # include <stddef.h>
 
-# define ERROR				-1
-
-# define SPIN_TIME			250		// μs
-# define SLEEP_TIME			5000	// μs
+# define SPIN_TIME			50		// μs
+# define SLEEP_TIME			250		// μs
+# define LONG_SLEEP_TIME	5000	// μs
 
 # define QUEUE_SIZE			1024	// t_log
 # define QUEUE_BATCH_SIZE	256		// t_log
 # define QUEUE_BUFFER_SIZE	16384	// byte
 # define LOG_LENGTH			64		// byte
+
+# define INT32_LENGTH		11		// byte
+# define INT64_LENGTH		20		// byte
 
 typedef enum e_state		t_state;
 
