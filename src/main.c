@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:01:50 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/20 23:08:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/21 00:41:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,16 @@
 /**
  * @brief Classic dining philosophers problem with threads and mutex.
  *
- * Philosophers think, eat, and sleep. Each philosopher is represented by a
- * thread. There is one fork per philosopher, but in order to eat a philosopher
- * needs two. So they have to take turns in eating. None should die from
- * starvation if the provided parameters consider the combined time of the
- * actions. The philosophers are not allowed to communicate with each other.
+ * - Philosophers think, eat, and sleep. Each philosopher is represented by a
+ * thread.
+ *
+ * - There is one fork per philosopher, but in order to eat a philosopher
+ * needs two so they have to take turns in eating.
+ *
+ * - None should die from starvation if the provided parameters consider the
+ * combined time of the actions and some overhead for computing time.
+ *
+ * - The philosophers are not allowed to communicate with each other.
  *
  * Resources shared between threads are locked with mutex to avoid data races.
  *
@@ -35,10 +40,10 @@
  * monitoring handles printing the states of philosophers to STDOUT. It
  * constructs batches from a queue of logs and writes them out periodically.
  *
- * Expects 4 arguments, with optional 5th one in the form
+ * Expects 4 arguments, with optional 5th one in the form of
  *
- * ./philo [number of philos] [time to die] [time to eat] [time to sleep]
- * (optional)[number of meals].
+ * ./philo `number_of_philos` `time_to_die` `time_to_eat` `time_to_sleep`
+ * (optional)`number_of_meals`
  *
  * For example:
  *
@@ -50,7 +55,7 @@
  *
  * - ./philo 200 130 60 60 10
  *
- * @note Ooutcome may depend on the performance of the computer used to run the
+ * @note Outcome may depend on the performance of the computer used to run the
  * program.
  *
  * @param argc Number of program arguments.
