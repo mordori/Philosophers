@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:01:50 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 13:51:21 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 23:08:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,14 @@
  *
  * - ./philo 1 100 100 100
  *
- * - ./philo 3 300 100 200
+ * - ./philo 3 610 200 100
  *
- * - ./philo 199 180 60 60 5
+ * - ./philo 199 185 60 60 5
  *
- * - ./philo 200 125 60 60 10
+ * - ./philo 200 130 60 60 10
+ *
+ * @note Ooutcome may depend on the performance of the computer used to run the
+ * program.
  *
  * @param argc Number of program arguments.
  * @param argv Array containing the program arguments.

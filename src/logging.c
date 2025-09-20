@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:25:54 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/20 04:27:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 22:05:51 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	*logging(void *arg)
 		if (q->count > 0)
 			flush_batch(q);
 		else
-			usleep(1000);
+			usleep(SLEEP_TIME);
 	}
 	return (NULL);
 }

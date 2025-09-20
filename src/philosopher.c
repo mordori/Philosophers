@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/20 04:46:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 22:06:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,14 @@ void	*philo_routine(void *arg)
 		return (NULL);
 	while (is_active(p->sim))
 	{
-		// if (p->meals != 0 && config.num_philos % 2 && time_now() <= p->time_last_meal + config.time_to_eat * 2)
-		// {
-		// 	uint64_t t = p->time_last_meal + config.time_to_eat * 2 - time_now();
-		// 	//usleep(t);
-		// 	//usleep(1000);
-		// }
 		log_state(p, thinking);
+		if (p->meals != 0 && config.num_philos % 2)
+			wait_until(p->time_last_meal + config.time_to_eat * 2 + config.time_to_eat / 2, p->sim);
 		eat(p);
 		if (!is_active(p->sim))
 			break ;
 		log_state(p, sleeping);
-		wait_until(config.time_to_sleep, p->sim);
+		wait_until(time_now() + config.time_to_sleep, p->sim);
 	}
 	return (NULL);
 }
@@ -112,7 +108,7 @@ static inline bool	is_single(t_philo *p)
 		log_state(p, thinking);
 		pthread_mutex_lock(&p->fork_l->mutex);
 		log_state(p, taking_a_fork);
-		usleep(p->sim->config.time_to_die * 1000);
+		usleep(p->sim->config.time_to_die);
 		pthread_mutex_unlock(&p->fork_l->mutex);
 		return (true);
 	}
@@ -151,7 +147,7 @@ static inline void	eat(t_philo *p)
 		++p->sim->philos_dined;
 	pthread_mutex_unlock(&p->sim->mutex_active);
 	log_state(p, eating);
-	wait_until(p->sim->config.time_to_eat, p->sim);
+	wait_until(time_now() + p->sim->config.time_to_eat, p->sim);
 	pthread_mutex_unlock(&p->fork_r->mutex);
 	pthread_mutex_unlock(&p->fork_l->mutex);
 }

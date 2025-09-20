@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 02:50:06 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 13:53:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 17:39:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@
 # include "defines.h"
 
 uint64_t	time_now(void);
-void		wait_until(uint64_t duration, t_sim *sim);
+void		wait_until(uint64_t end, t_sim *sim);
 
 #endif

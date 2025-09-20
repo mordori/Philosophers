@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 02:49:55 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/20 04:27:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 22:42:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,31 @@
  * @param duration Time in microseconds to be waited.
  * @param sim Pointer to the simulation.
  */
-void	wait_until(uint64_t duration, t_sim *sim)
+void	wait_until(uint64_t end, t_sim *sim)
 {
-	uint64_t	time_end;
+	uint64_t	now;
+	uint64_t	remaining;
+	uint64_t	duration;
 
-	time_end = time_now() + duration;
-	while (time_now() < time_end && is_active(sim))
+	while (is_active(sim))
 	{
-		if (time_end - time_now() > LONG_SLEEP_TIME + 1000)
-			usleep(LONG_SLEEP_TIME);
+		now = time_now();
+		if (now >= end)
+			break ;
+		remaining = end - now;
+		if (remaining > SLEEP_TIME * 100)
+			duration = SLEEP_TIME * 100;
+		else if (remaining > SLEEP_TIME * 50)
+			duration = SLEEP_TIME * 50;
+		else if (remaining > SLEEP_TIME * 20)
+			duration = SLEEP_TIME * 20;
+		else if (remaining > SLEEP_TIME * 5)
+			duration = SLEEP_TIME * 5;
 		else
-			usleep(SLEEP_TIME);
+			duration = SLEEP_TIME;
+		if (duration > remaining)
+			duration = remaining;
+		usleep(duration);
 	}
 }
 
