@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:25:54 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 14:56:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 04:27:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	log_state(t_philo *p, const t_state state)
 	next = (q->head + 1) % QUEUE_SIZE;
 	if (next != q->tail)
 	{
-		q->logs[q->head].timestamp = time_now() - p->sim->time_start;
+		q->logs[q->head].timestamp = (time_now() - p->sim->time_start) / 1000;
 		q->logs[q->head].philo_id = p->id;
 		q->logs[q->head].state = states[state];
 		q->head = next;

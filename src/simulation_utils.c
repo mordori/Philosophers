@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 15:13:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 04:45:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,10 +139,7 @@ static inline bool	init_philo(t_sim *sim, int i)
 	if (config->num_philos == 1)
 		return (false);
 	if (i % 2 == 0)
-	{
-		p->fork_l = &sim->forks[i];
 		p->fork_r = &sim->forks[(i + 1) % config->num_philos];
-	}
 	else
 	{
 		p->fork_l = &sim->forks[(i + 1) % config->num_philos];

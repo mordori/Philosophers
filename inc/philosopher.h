@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:21:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 02:20:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 04:25:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ struct s_philo
 	t_fork				*fork_r;
 	int					id;
 	pthread_t			thread;
-	volatile int64_t	meals;
-	volatile uint64_t	time_last_meal;
+	int64_t				meals;
+	uint64_t			time_last_meal;
 };
 
 void	*philo_routine(void *arg);

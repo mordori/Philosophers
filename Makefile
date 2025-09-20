@@ -6,14 +6,14 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/30 16:50:13 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/19 15:13:51 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/20 04:24:26 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=philo
 
 CC			:=cc
-CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -O3 -march=native -funroll-loops -fno-plt
+CFLAGS		:=-Wall -Wextra  -Wunreachable-code -O3 -march=native -funroll-loops -fno-plt
 LDFLAGS		:=-pthread -flto
 MAKEFLAGS	+= --no-print-directory
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 14:58:08 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 04:27:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,9 +157,6 @@ time_now() - sim->philos[i].time_last_meal > sim->config.time_to_die)
  */
 static inline bool	init_config(t_sim *sim, const int argc, char *argv[])
 {
-	bool	result;
-
-	result = true;
 	sim->config.num_meals = -1;
 	if (\
 !parse_int(argv[1], &sim->config.num_philos) || \
@@ -167,29 +164,20 @@ static inline bool	init_config(t_sim *sim, const int argc, char *argv[])
 !parse_uint64(argv[3], &sim->config.time_to_eat) || \
 !parse_uint64(argv[4], &sim->config.time_to_sleep) || \
 (argc == 6 && !parse_int(argv[5], &sim->config.num_meals)))
-	{
-		ft_perror("Invalid input.");
-		return (false);
-	}
+		return (parse_error("Invalid input."));
 	if (sim->config.num_philos < 1)
-	{
-		ft_perror("Invalid amount of philosophers.");
-		result = false;
-	}
+		return (parse_error("Invalid amount of philosophers."));
 	if (\
 sim->config.time_to_die < 1 || \
 sim->config.time_to_eat < 1 || \
 sim->config.time_to_sleep < 1)
-	{
-		ft_perror("Invalid amount of time.");
-		result = false;
-	}
+		return (parse_error("Invalid amount of time."));
 	if (argc == 6 && sim->config.num_meals < 1)
-	{
-		ft_perror("Invalid amount of meals.");
-		result = false;
-	}
-	return (result);
+		return (parse_error("Invalid amount of meals."));
+	sim->config.time_to_die *= 1000;
+	sim->config.time_to_eat *= 1000;
+	sim->config.time_to_sleep *= 1000;
+	return (true);
 }
 
 /**

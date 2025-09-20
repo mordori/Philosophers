@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 02:49:55 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 13:53:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 04:27:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 #include "simulation_utils.h"
 
 /**
- * @brief Sleeps the process for a specified duration in milliseconds.
+ * @brief Sleeps the process for a specified duration in microseconds.
  *
  * Waiting is done in chuncks to check whether the simulation is active.
  *
  * @note Suitable for longer sleeping.
  *
- * @param duration Time in milliseconds to be waited.
+ * @param duration Time in microseconds to be waited.
  * @param sim Pointer to the simulation.
  */
 void	wait_until(uint64_t duration, t_sim *sim)
@@ -30,7 +30,7 @@ void	wait_until(uint64_t duration, t_sim *sim)
 	time_end = time_now() + duration;
 	while (time_now() < time_end && is_active(sim))
 	{
-		if (time_end - time_now() > 6)
+		if (time_end - time_now() > LONG_SLEEP_TIME + 1000)
 			usleep(LONG_SLEEP_TIME);
 		else
 			usleep(SLEEP_TIME);
@@ -48,6 +48,6 @@ uint64_t	time_now(void)
 	uint64_t		time;
 
 	gettimeofday(&tv, NULL);
-	time = (uint64_t)tv.tv_sec * 1000 + (uint64_t)tv.tv_usec / 1000;
+	time = (uint64_t)tv.tv_sec * 1000000 + (uint64_t)tv.tv_usec;
 	return (time);
 }

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:24:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 05:22:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 04:26:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,20 @@ void	ft_perror(char *msg)
 	bytes = write(STDERR_FILENO, msg, len);
 	bytes = write(STDERR_FILENO, "\n", 1);
 	(void)bytes;
+}
+
+/**
+ * @brief Flags an error occurrance in the simulation and prints an error
+ * message to STDERR.
+ *
+ * @param msg Error message to display.
+ *
+ * @return False to signal forward the error.
+ */
+bool	parse_error(char *msg)
+{
+	ft_perror(msg);
+	return (false);
 }
 
 /**

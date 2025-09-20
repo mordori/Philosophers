@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:11:59 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 20:02:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 04:46:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,13 @@ void	*philo_routine(void *arg)
 		return (NULL);
 	while (is_active(p->sim))
 	{
+		// if (p->meals != 0 && config.num_philos % 2 && time_now() <= p->time_last_meal + config.time_to_eat * 2)
+		// {
+		// 	uint64_t t = p->time_last_meal + config.time_to_eat * 2 - time_now();
+		// 	//usleep(t);
+		// 	//usleep(1000);
+		// }
 		log_state(p, thinking);
-		if (p->meals != 0 && config.num_philos % 2)
-			usleep(1000);
 		eat(p);
 		if (!is_active(p->sim))
 			break ;

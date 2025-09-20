@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:26:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 04:55:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 04:26:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ struct s_queue
 	char			buf[QUEUE_BUFFER_SIZE];
 	pthread_mutex_t	mutex;
 	int				count;
-	volatile int	head;
-	volatile int	tail;
-	volatile bool	done;
+	int				head;
+	int				tail;
+	bool			done;
 	bool			init;
 	t_sim			*sim;
 };

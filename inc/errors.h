@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 19:27:57 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 21:11:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/20 04:26:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "defines.h"
 
 void	ft_perror(char *msg);
+bool	parse_error(char *msg);
 void	sim_error(t_sim *sim);
 
 #endif
