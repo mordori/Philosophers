@@ -1,8 +1,6 @@
 # Philosophers
-## ✨ Features
+## 📖 Introduction
 **Dining philopsophers with threads and mutex.**
-
-Description:
 
 Philosophers think, eat, and sleep. Each philosopher is represented by a thread. There is one fork per philosopher, but in order to eat a philosopher needs two so they have to take turns in eating. None should die from starvation, if the provided parameters consider the combined time of the actions and some overhead for computing time. The philosophers are not allowed to communicate with each other.
 
