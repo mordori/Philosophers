@@ -8,9 +8,13 @@ Philosophers think, eat, and sleep. Each philosopher is represented by a thread.
 
 - Resources shared between threads are locked with mutex to avoid data races
 
-- Main thread handles monitoring the philosophers living status, and if they have eaten the optionally provided number of meals. In those cases the simulation will be flagged to be over
+- Main thread handles monitoring the philosophers' status, controlling the simulation
 
-- A dedicated logging thread decoupled from philosopher status monitoring handles the printing of the states of the philosophers. It constructs batches from a queue of logs and writes them out periodically
+- Dedicated logging thread decoupled from status monitoring handles the printing of the philosophers' states. It constructs batches from a queue of logs and writes them out periodically
+
+<p align="center">
+  <img src="https://github.com/mordori/mordori/blob/main/doc/asdasd.gif" alt="Demo" />
+</p>
 
 > [!IMPORTANT]
 > Outcome may depend on the performance of the computer used to run the program.
