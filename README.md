@@ -2,8 +2,6 @@
 ## 📖 Introduction
 **Dining philopsophers with threads and mutex.**
 
-Description:
-
 - Philosophers think, eat, and sleep
 
 - Each philosopher is represented by a thread
@@ -18,11 +16,12 @@ Description:
   <img src="https://github.com/mordori/mordori/blob/main/doc/asdasd.gif" alt="Demo" />
 </p>
 
-Resources shared between threads are locked with mutex to avoid data races.
+## ✨ Features
+- Resources shared between threads are locked with mutex to avoid data races
 
-Main thread handles monitoring the philosophers' status, controlling the simulation.
+- Main thread handles monitoring the philosophers' status, controlling the simulation
 
-Dedicated logging thread decoupled from status monitoring handles the printing of the philosophers' states. It constructs batches from a queue of logs and writes them out periodically.
+- Dedicated logging thread decoupled from status monitoring handles the printing of the philosophers' states. It constructs batches from a queue of logs and writes them out periodically
 
 > [!IMPORTANT]
 > Outcome may depend on the performance of the computer used to run the program.
