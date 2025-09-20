@@ -49,7 +49,7 @@ git clone https://github.com/mordori/Philosophers.git Philosophers
 cd Philosophers
 make -j4
 ```
-Execute the program with numbers in a random order, for example
+Execute the program with proper input, for example
 ``` bash
 ./philo 3 610 200 100 3
 ```
