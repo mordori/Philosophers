@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 14:01:50 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/21 00:41:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/21 00:53:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
  * needs two so they have to take turns in eating.
  *
  * - None should die from starvation if the provided parameters consider the
- * combined time of the actions and some overhead for computing time.
+ * number of philosophers, the combined time of the actions, and some overhead
+ * for computing time.
  *
  * - The philosophers are not allowed to communicate with each other.
  *

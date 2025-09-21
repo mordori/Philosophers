@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:26:03 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/20 04:26:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/21 19:14:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ struct s_queue
 	int				count;
 	int				head;
 	int				tail;
+	int				bytes;
 	bool			done;
 	bool			init;
 	t_sim			*sim;

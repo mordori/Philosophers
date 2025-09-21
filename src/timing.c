@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 02:49:55 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/20 22:42:58 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/21 18:50:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	wait_until(uint64_t end, t_sim *sim)
 	uint64_t	remaining;
 	uint64_t	duration;
 
-	while (is_active(sim))
+	while (time_now() < end && is_active(sim))
 	{
 		now = time_now();
 		if (now >= end)

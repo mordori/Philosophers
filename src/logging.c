@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:25:54 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/20 22:05:51 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/21 19:26:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	*logging(void *arg)
 	while (true)
 	{
 		pthread_mutex_lock(&q->mutex);
-		if (q->done && q->head == q->tail)
+		if ((q->done && q->head == q->tail) || q->bytes == -1)
 		{
 			pthread_mutex_unlock(&q->mutex);
 			break ;
@@ -125,7 +125,7 @@ static inline void	flush_batch(t_queue *q)
 
 	offset = 0;
 	i = 0;
-	while (i < q->count)
+	while (i < q->count && q->bytes != -1)
 	{
 		offset += uint64_to_str(q->batch[i].timestamp, q->buf + offset);
 		q->buf[offset++] = ' ';
@@ -137,11 +137,11 @@ static inline void	flush_batch(t_queue *q)
 		q->buf[offset++] = '\n';
 		if (offset >= QUEUE_BUFFER_SIZE - LOG_LENGTH)
 		{
-			write(STDOUT_FILENO, q->buf, offset);
+			q->bytes = write(STDOUT_FILENO, q->buf, offset);
 			offset = 0;
 		}
 		++i;
 	}
-	if (offset > 0)
-		write(STDOUT_FILENO, q->buf, offset);
+	if (offset > 0 && q->bytes != -1)
+		q->bytes = write(STDOUT_FILENO, q->buf, offset);
 }
