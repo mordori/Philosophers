@@ -23,6 +23,8 @@
 
 - Dedicated logging thread decoupled from status monitoring handles the printing of the philosophers' states. It constructs batches from a queue of logs and writes them out periodically
 
+<br>
+
 > [!IMPORTANT]
 > Outcome may depend upon the performance of the computer used to run the program.
 
