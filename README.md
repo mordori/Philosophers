@@ -74,7 +74,7 @@ You can increase the queue size by recompiling the program with a define
 ``` git
 make QUEUE_SIZE=2048
 ```
-To delete all of the compiled files, use
+To delete all of the generated files, use
 ``` Makefile
 make fclean
 ```
