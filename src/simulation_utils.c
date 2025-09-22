@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/22 15:52:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:06:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include "philosopher.h"
 #include "logging.h"
 #include "timing.h"
-
-static inline bool	init_philo(t_sim *sim, int i);
 
 /**
  * @brief Performs activity check of the simulation.
@@ -33,6 +31,19 @@ bool	is_active(t_sim *sim)
 	result = (sim->active && !sim->error);
 	pthread_mutex_unlock(&sim->mutex_active);
 	return (result);
+}
+
+/**
+ * @brief Deactivates the simulation if the queue is inactive.
+ *
+ * @param sim Pointer to the simulation.
+ */
+void	sync_status(t_sim *sim)
+{
+	pthread_mutex_lock(&sim->queue->mutex);
+	if (sim->queue->done)
+		sim->active = false;
+	pthread_mutex_unlock(&sim->queue->mutex);
 }
 
 /**
@@ -96,54 +107,37 @@ void	clean_sim(t_sim *sim)
 }
 
 /**
- * @brief Initializes all the philosophers.
- *
- * @param sim Pointer to the simulation.
- */
-void	init_philos(t_sim *sim)
-{
-	int	i;
-
-	i = 0;
-	while (i < sim->config.num_philos)
-	{
-		if (!init_philo(sim, i))
-			return ;
-		++i;
-	}
-}
-
-/**
- * @brief Initializes a philosopher.
+ * @brief Initializes the philosophers.
  *
  * @note Fork order is reversed for odd and even philosophers to avoid
  * deadlocks.
  *
  * @param sim Pointer to the simulation.
- * @param i Index of a philosopher in the array.
- *
- * @return Status whether there is only one philosopher to perform an early
- * exit in the initialization loop.
  */
-static inline bool	init_philo(t_sim *sim, int i)
+void	init_philos(t_sim *sim)
 {
 	t_philo		*p;
 	t_config	*config;
+	int			i;
 
-	p = &sim->philos[i];
-	config = &sim->config;
-	p->id = i + 1;
-	p->sim = sim;
-	p->meals = 0;
-	p->fork_l = &sim->forks[i];
-	if (config->num_philos == 1)
-		return (false);
-	if (i % 2 == 0)
-		p->fork_r = &sim->forks[(i + 1) % config->num_philos];
-	else
+	i = 0;
+	while (i < sim->config.num_philos)
 	{
-		p->fork_l = &sim->forks[(i + 1) % config->num_philos];
-		p->fork_r = &sim->forks[i];
+		p = &sim->philos[i];
+		config = &sim->config;
+		p->id = i + 1;
+		p->sim = sim;
+		p->meals = 0;
+		p->fork_l = &sim->forks[i];
+		if (config->num_philos == 1)
+			return ;
+		if (i % 2 == 0)
+			p->fork_r = &sim->forks[(i + 1) % config->num_philos];
+		else
+		{
+			p->fork_l = &sim->forks[(i + 1) % config->num_philos];
+			p->fork_r = &sim->forks[i];
+		}
+		++i;
 	}
-	return (true);
 }

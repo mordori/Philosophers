@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/22 07:41:40 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/22 18:47:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ static inline void	monitor_philos(t_sim *sim)
 	while (!all_threads_running(sim))
 		usleep(SPIN_TIME);
 	usleep(SLEEP_TIME);
-	while (sim->active)
+	while (is_active(sim))
 	{
 		i = sim->config.num_philos;
 		pthread_mutex_lock(&sim->mutex_active);
@@ -140,10 +140,7 @@ time_now() - sim->philos[i].time_last_meal > sim->config.time_to_die)
 		}
 		if (!sim->active)
 			stop_logging(sim->queue);
-		pthread_mutex_lock(&sim->queue->mutex);
-		if (sim->queue->done)
-			sim->active = false;
-		pthread_mutex_unlock(&sim->queue->mutex);
+		sync_status(sim);
 		pthread_mutex_unlock(&sim->mutex_active);
 		usleep(SLEEP_TIME);
 	}

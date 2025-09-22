@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/30 16:50:13 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/22 16:27:50 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/22 18:28:59 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,7 @@ $(NAME): $(OBJS)
 	@echo "$(YELLOW) [✔] $@ built with QUEUE_SIZE=$(QUEUE_SIZE)$(COLOR)"
 
 config:
-	@if [ ! -f "$(CONF)" ] || [ "$$(cat "$(CONF)")" != "$(QUEUE_SIZE)" ]; then \
+	@if [ ! -e "$(CONF)" ] || [ "$$(cat "$(CONF)")" != "$(QUEUE_SIZE)" ]; then \
 		echo "$(QUEUE_SIZE)" > "$(CONF)"; \
 	elif [ -e "$(NAME)" ]; then \
 		echo "$(NAME) is already configured with QUEUE_SIZE=$(QUEUE_SIZE)."; \

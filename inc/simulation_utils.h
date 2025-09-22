@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 17:00:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/19 02:59:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/22 18:47:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,6 @@ bool	is_active(t_sim *sim);
 bool	all_threads_running(t_sim *sim);
 void	clean_sim(t_sim *sim);
 void	init_philos(t_sim *sim);
+void	sync_status(t_sim *sim);
 
 #endif
