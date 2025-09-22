@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:13:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/20 22:05:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/22 00:58:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,14 @@
 # include <limits.h>
 # include <stddef.h>
 
+# define ERROR				-1
+
 # define SPIN_TIME			50		// μs
 # define SLEEP_TIME			1000	// μs
 
-# define QUEUE_SIZE			1024	// t_log
+# ifndef QUEUE_SIZE
+#  define QUEUE_SIZE		1024	// t_log
+# endif
 # define QUEUE_BATCH_SIZE	256		// t_log
 # define QUEUE_BUFFER_SIZE	16384	// byte
 # define LOG_LENGTH			64		// byte

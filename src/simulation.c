@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:24:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/21 18:46:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/22 06:00:56 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ pthread_create(&sim->philos[i].thread, NULL, philo_routine, &sim->philos[i]))
 	if (i == sim->config.num_philos)
 	{
 		if (pthread_create(&sim->thread_queue, NULL, logging, sim->queue))
-			sim_error(sim);
+			error_sim(sim);
 		else
 		{
 			monitor_philos(sim);
@@ -98,13 +98,13 @@ pthread_create(&sim->philos[i].thread, NULL, philo_routine, &sim->philos[i]))
 		}
 	}
 	else
-		sim_error(sim);
+		error_sim(sim);
 	while (i--)
 		pthread_join(sim->philos[i].thread, NULL);
 }
 
 /**
- * @brief Philosopher monitoring routine.
+ * @brief Philosopher monitoring routine, controls the simulation.
  *
  * Flags the simulation to be over if either:
  *
@@ -124,7 +124,7 @@ static inline void	monitor_philos(t_sim *sim)
 	while (!all_threads_running(sim))
 		usleep(SPIN_TIME);
 	usleep(SLEEP_TIME);
-	while (sim->active)
+	while (is_active(sim))
 	{
 		i = sim->config.num_philos;
 		pthread_mutex_lock(&sim->mutex_active);
@@ -138,8 +138,14 @@ time_now() - sim->philos[i].time_last_meal > sim->config.time_to_die)
 				sim->active = false;
 			}
 		}
+		if (!sim->active)
+			stop_logging(sim->queue);
 		pthread_mutex_lock(&sim->queue->mutex);
-		sim->queue->done = !sim->active;
+		if (sim->queue->done)
+		{
+			printf("ASD\n");
+			sim->active = false;
+		}
 		pthread_mutex_unlock(&sim->queue->mutex);
 		pthread_mutex_unlock(&sim->mutex_active);
 		usleep(SLEEP_TIME);
@@ -148,6 +154,8 @@ time_now() - sim->philos[i].time_last_meal > sim->config.time_to_die)
 
 /**
  * @brief Parses and initializes the configuration.
+ *
+ * @note Times are converted to microseconds after validation.
  *
  * @param sim Pointer to the simulation.
  * @param argc Number of program arguments.
@@ -164,16 +172,16 @@ static inline bool	init_config(t_sim *sim, const int argc, char *argv[])
 !parse_uint64(argv[3], &sim->config.time_to_eat) || \
 !parse_uint64(argv[4], &sim->config.time_to_sleep) || \
 (argc == 6 && !parse_int(argv[5], &sim->config.num_meals)))
-		return (parse_error("Invalid input."));
+		return (error_parse("Invalid input."));
 	if (sim->config.num_philos < 1)
-		return (parse_error("Invalid amount of philosophers."));
+		return (error_parse("Invalid amount of philosophers."));
 	if (\
 sim->config.time_to_die < 1 || \
 sim->config.time_to_eat < 1 || \
 sim->config.time_to_sleep < 1)
-		return (parse_error("Invalid amount of time."));
+		return (error_parse("Invalid amount of time."));
 	if (argc == 6 && sim->config.num_meals < 1)
-		return (parse_error("Invalid amount of meals."));
+		return (error_parse("Invalid amount of meals."));
 	sim->config.time_to_die *= 1000;
 	sim->config.time_to_eat *= 1000;
 	sim->config.time_to_sleep *= 1000;

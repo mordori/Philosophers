@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 02:49:55 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/21 18:50:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/22 05:58:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	wait_until(uint64_t end, t_sim *sim)
 }
 
 /**
- * @brief Returns the current time.
+ * @brief Returns the current time in microseconds.
  *
  * @return Time in microseconds since Epoch.
  */

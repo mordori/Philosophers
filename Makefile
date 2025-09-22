@@ -6,14 +6,17 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/30 16:50:13 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/21 19:05:33 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/22 05:17:28 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=philo
 
+QUEUE_SIZE	:=1024
+
 CC			:=cc
-CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -O3 -march=native -funroll-loops -fno-plt
+DEFS		:=-D QUEUE_SIZE=$(QUEUE_SIZE) -g
+CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code $(DEFS) -O3 -march=native -funroll-loops -fno-plt
 LDFLAGS		:=-pthread -flto
 MAKEFLAGS	+= --no-print-directory
 
