@@ -6,3 +6,5 @@ obj/
 *.d
 a.out
 philo
+.config
+philo_trace

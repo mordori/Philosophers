@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:56:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/20 04:45:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/22 15:52:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ bool	is_active(t_sim *sim)
  * @param sim Pointer to the simulation.
  *
  * @return Running status of the created threads. Also sets the status when an
- * error has occurred in intializing the threads so that the existing ones will
- * get terminated and joined.
+ * error has occurred in intializing the threads or queue hits capacity so that
+ * the existing ones will get terminated and joined.
  */
 bool	all_threads_running(t_sim *sim)
 {
@@ -56,7 +56,9 @@ bool	all_threads_running(t_sim *sim)
 	pthread_mutex_lock(&sim->queue->mutex);
 	result = \
 (sim->threads_running == sim->config.num_philos && sim->queue->init);
-	if (result && !sim->active && !sim->error)
+	if (sim->error || sim->queue->done)
+		result = true;
+	else if (result && !sim->active)
 	{
 		sim->time_start = time_now();
 		i = 0;
@@ -67,8 +69,6 @@ bool	all_threads_running(t_sim *sim)
 		}
 		sim->active = true;
 	}
-	if (sim->error)
-		result = true;
 	pthread_mutex_unlock(&sim->queue->mutex);
 	pthread_mutex_unlock(&sim->mutex_active);
 	return (result);
