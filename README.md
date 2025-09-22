@@ -53,9 +53,9 @@ Execute the program with proper input, for example
 ``` bash
 ./philo 3 610 200 100 3
 ```
-A lot of logs will be queued per millisecond with a large `number_of_philos` and small `time_to_eat` or `time_to_sleep`.
+A lot of logs will be produced and queued per millisecond with a large `number_of_philos` and small `time_to_eat` or `time_to_sleep`.
 
-The default 1024 logs per millisecond might not be enough for example to `./philo 999 185 60 60 10` so the program may print an error and end the simulation.
+The default 1024 logs per millisecond might not be enough for example to `./philo 999 185 60 60 10`, so the program will print an error and end the simulation.
 
 You can increase the queue size by recompiling with a define
 ``` git
