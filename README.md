@@ -28,7 +28,9 @@
 
 > [!NOTE]
 > ## 🔡 Input
-The program expects four arguments, with optional fifth one in the form of
+The program expects four arguments, with an optional fifth one.
+
+The time inputs are in milliseconds.
 ``` bash
 ./philo `number_of_philos` `time_to_die` `time_to_eat` `time_to_sleep` (optional)`number_of_meals`
 ```
@@ -40,6 +42,10 @@ For example:
 |  `./philo 3 610 200 100`     | Nobody dies, inifinite        |
 |  `./philo 199 185 60 60 5`   | Nobody dies, finite           |
 |  `./philo 200 130 60 60 10`  | Nobody dies, finite           |
+
+The program internally calculates time in microseconds for accuracy.
+
+The timestamps of the printed states are in milliseconds.
 
 > [!TIP]
 > ## 🚀 How to use
