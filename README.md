@@ -50,7 +50,7 @@ For example:
 
 - The program internally calculates time in microseconds for accuracy.
 
-- The timestamps of the printed states are in milliseconds since the start of the simulation.
+- The timestamps of the printed states are times in milliseconds since the start of the simulation.
 
 <br>
 
