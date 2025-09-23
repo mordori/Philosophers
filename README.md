@@ -70,7 +70,7 @@ A large amount of logs will be produced and queued per millisecond with a big `n
 
 The default 1024 logs per millisecond might not be enough for example with `./philo 999 185 60 60 10`, so the program will print an error and end the simulation.
 
-You can increase the queue size by recompiling the program with a define
+You can increase the queue size by recompiling the program with a define, e.g.
 ``` git
 make QUEUE_SIZE=2048
 ```
